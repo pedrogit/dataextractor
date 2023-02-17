@@ -1,0 +1,39 @@
+div, input, textarea {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  #main, #defs, #data, #source, #field, #start, #end, #url, #urlform, #textsource {
+    display: flex;
+  }
+  
+  #data, #source {
+    width: 50%;
+  }
+  
+  #main, #defs, #URLform {
+    flex-direction: row;
+    width: 100%;
+  }
+  
+  #data, #source, #field, #start, #end, #url, #textsource {
+    flex-direction: column;
+  }
+  
+  #field, #start, #end, #url, #textsource {
+     justify-content: flex-end;
+  }
+  
+  #webpageinput, #sourceinput, #csvinput {
+    min-height: 200px;
+  }
+  
+  p {
+    margin: 0px;
+    padding: 5px;
+  }
+  
+  #field p, #start p, #end p, #url p, #textsource p {
+    height: 2em;
+  }
+  
