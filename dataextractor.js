@@ -16,7 +16,8 @@ var extractValues = function(source, fields, starts, ends) {
           found = false;
         } else {
           row.push(source.substring(startIdx + starts[i].length, endIdx));
-          currentPos = endIdx + ends[i].length;
+          //currentPos = endIdx + ends[i].length;
+          currentPos = endIdx;
         }
       }
     }
@@ -63,8 +64,11 @@ var prepareExtract = function() {
   document.getElementById("csvinput").value = result;
 };
 
+
 var changingfields = document.getElementsByClassName("changingfield");
 
 Array.from(changingfields).forEach(function(element) {
   element.addEventListener('input', prepareExtract)
 });
+
+document.getElementById("sourceinput").value = "<row><p>data1</p><p>data2</p></row><row><p>data3</p><p>data4</p></row>";

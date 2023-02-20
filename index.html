@@ -1,37 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-  <body>
-    <div id=main>
-      <div id=data>
-        <div id=defs>
-          <div id=field>
-            <p>Field name</p>
+
+<body>
+  <div id=main>
+    <div id=dataDefinition>
+      <div id=fieldDefs>
+        <div id=fieldDefsHeader class=fieldDefsRow>
+          <p class=fieldName>Field name</p>
+          <p class=startExpression>Preceding expression</p>
+          <p class=endExpression>Following expression</p>
+        </div>
+        <div class=fieldDefsRow>
+          <div class=fieldName>
             <input class=changingfield name=fieldname />
           </div>
-          <div id=start>
-            <p>Preceding expression</p>
+          <div class=startExpression>
             <input class=changingfield name=start />
           </div>
-          <div id=end>
-            <p>Following expression</p>
+          <div class=endExpression>
             <input class=changingfield name=end />
           </div>
         </div>
-        <div id=csv>
-          <p>Resulting CSV</p>
-          <textarea id=csvinput></textarea>
+        <div class="fieldDefsRow">
+          <div class=fieldName>
+            <input class=changingfield name=fieldname />
+          </div>
+          <div class=startExpression>
+            <input class=changingfield name=start />
+          </div>
+          <div class=endExpression>
+            <input class=changingfield name=end />
+          </div>
         </div>
       </div>
-      <div id=source>
-        <div id=textsource>
-          <p>Source</p>
-          <textarea id=sourceinput class=changingfield>&lt;p&gt;data1&lt;/p&gt;&lt;p&gt;data2&lt;/p&gt;</textarea>
-        </div>
+      <div id=resultingCVS>
+        <p>Resulting CSV</p>
+        <textarea id=csvinput></textarea>
       </div>
     </div>
-  </body>
-  <script src="dataextractor.js"></script>
-  </html>
+    <div id=dataSource>
+      <div id=textSource>
+        <p>Source</p>
+        <textarea id=sourceinput class=changingfield></textarea>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="dataextractor.js"></script>
+
+</html>
