@@ -3,6 +3,8 @@ var extractValues = (source, fields, starts, ends) => {
   var data = [];
   var found = source !== "" && starts[0] !== "" && ends[0] !== "";
   var currentPos = 0;
+  var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');;
+
   while (found) {
     var row = [];
     for (let i = 0; i < fields.length && found; i++) {
@@ -11,13 +13,27 @@ var extractValues = (source, fields, starts, ends) => {
         found = false;
       } else {
         currentPos = startIdx + starts[i].length;
+        
+        var startStr = source.substring(startIdx, currentPos).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        if (startStr != "")
+        {
+          selectedSource = selectedSource.replaceAll(startStr, '<span style="background-color:red">' + startStr + '</span>');
+          document.getElementById("sourceinputselectable").innerHTML = selectedSource;
+        }
+
         var endIdx = source.indexOf(ends[i], currentPos);
         if (endIdx == -1) {
           found = false;
         } else {
           row.push(source.substring(startIdx + starts[i].length, endIdx));
-          //currentPos = endIdx + ends[i].length;
           currentPos = endIdx;
+
+          var endStr = source.substring(endIdx, currentPos + ends[i].length).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+          if (endStr != "")
+          {
+            selectedSource = selectedSource.replaceAll(endStr, '<span style="background-color:blue">' + endStr + '</span>');
+            document.getElementById("sourceinputselectable").innerHTML = selectedSource;
+          }
         }
       }
     }
@@ -59,6 +75,8 @@ var prepareExtract = () => {
 
   var source = document.getElementById("sourceinput").value;
 
+  document.getElementById("sourceinputselectable").innerHTML = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
   // extract
   result = extractValues(source, fieldNames, starts, ends);
   document.getElementById("csvinput").value = result;
@@ -76,6 +94,7 @@ var addRow = (el) => {
 
   var target = document.getElementById('fieldDefsRows');
   target.appendChild(newRow);
+  // increment the field name
   newRow.querySelector("input[name='fieldname']").value = "field" + target.childElementCount;
 
   prepareExtract();

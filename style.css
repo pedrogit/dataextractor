@@ -29,7 +29,11 @@ div {
   box-sizing: border-box;
 }
 
-#webpageinput, #sourceinput, #csvinput {
+#webpageinput, #sourceinput, #csvinput, #sourceinputselectable {
   min-height: 200px;
+}
+
+#sourceinputselectable {
+  border: 1px solid red;
 }
 
