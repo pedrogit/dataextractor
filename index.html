@@ -10,31 +10,25 @@
     <div id=dataDefinition>
       <div id=fieldDefs>
         <div id=fieldDefsHeader class=fieldDefsRow>
-          <p class=fieldName>Field name</p>
-          <p class=startExpression>Preceding expression</p>
-          <p class=endExpression>Following expression</p>
+          <p class=fieldName>Field Name</p>
+          <p class=startExpression>Preceding Expression</p>
+          <p class=endExpression>Following Expression</p>
         </div>
-        <div class=fieldDefsRow>
-          <div class=fieldName>
-            <input class=changingfield name=fieldname />
-          </div>
-          <div class=startExpression>
-            <input class=changingfield name=start />
-          </div>
-          <div class=endExpression>
-            <input class=changingfield name=end />
+        <div id=fieldDefsRows>
+          <div id=firstFieldDefsRow class=fieldDefsRow>
+            <div class=fieldName>
+              <input class=changingfield name=fieldname value="field1"/>
+            </div>
+            <div class=startExpression>
+              <input class=changingfield name=start />
+            </div>
+            <div class=endExpression>
+              <input class=changingfield name=end />
+            </div>
           </div>
         </div>
         <div class="fieldDefsRow">
-          <div class=fieldName>
-            <input class=changingfield name=fieldname />
-          </div>
-          <div class=startExpression>
-            <input class=changingfield name=start />
-          </div>
-          <div class=endExpression>
-            <input class=changingfield name=end />
-          </div>
+          <button id="addRowButton">Add field</button>
         </div>
       </div>
       <div id=resultingCVS>

@@ -1,5 +1,5 @@
 //debugger;
-var extractValues = function(source, fields, starts, ends) {
+var extractValues = (source, fields, starts, ends) => {
   var data = [];
   var found = source !== "" && starts[0] !== "" && ends[0] !== "";
   var currentPos = 0;
@@ -34,7 +34,7 @@ var extractValues = function(source, fields, starts, ends) {
   return resultCSV;
 }
 
-var prepareExtract = function() {
+var prepareExtract = () => {
   var result = '';
   var fieldNames = [];
   var fieldnameInputs = document.getElementsByName("fieldname");
@@ -64,11 +64,31 @@ var prepareExtract = function() {
   document.getElementById("csvinput").value = result;
 };
 
+var addRow = (el) => {
+  var newRow = document.getElementById('firstFieldDefsRow').cloneNode(true);
+  newRow.removeAttribute('id');
+  // reset the inputs
+  var changingfields = newRow.getElementsByClassName("changingfield");
+  Array.from(changingfields).forEach(function(element) {
+    element.addEventListener('input', prepareExtract);
+    element.value = "";
+  });
+
+  var target = document.getElementById('fieldDefsRows');
+  target.appendChild(newRow);
+  newRow.querySelector("input[name='fieldname']").value = "field" + target.childElementCount;
+
+  prepareExtract();
+}
 
 var changingfields = document.getElementsByClassName("changingfield");
 
 Array.from(changingfields).forEach(function(element) {
-  element.addEventListener('input', prepareExtract)
+  element.addEventListener('input', prepareExtract);
 });
 
+document.getElementById('addRowButton').addEventListener("click", addRow);
+
 document.getElementById("sourceinput").value = "<row><p>data1</p><p>data2</p></row><row><p>data3</p><p>data4</p></row>";
+
+prepareExtract();
