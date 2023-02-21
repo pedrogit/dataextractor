@@ -10,29 +10,23 @@ String.prototype.replaceAt = function(str, repl, idx) {
   return  result;
 }
 
-/*
-var x = "aaayybbyyccyy".replaceAt("yy", "xx", -5);
-var x = "aaayybbyyccyy".replaceAt("yy", "xx", 0);
-var x = "aaayybbyyccyy".replaceAt("yy", "xx", 5);
-var x = "aaayybbyyccyy".replaceAt("yy", "xx", 10);
-var x = "aaayybbyyccyy".replaceAt("yy", "xx", 20);
-*/
-
 var extractValues = (source, fields, starts, ends) => {
   var data = [];
-  //var found = source !== "" && starts[0] !== "" && ends[0] !== "";
-  var foundStart = true;
-  var foundEnd = true;
+  var somethingFound = false;
   var currentPos = 0;
   var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
   var selPos = 0;
 
-  while (foundStart || foundEnd) {
+  do {
+    somethingFound = false;
+    var foundStart = true;
+    var foundEnd = true;
     var row = [];
-    for (let i = 0; i < fields.length && (foundStart || foundEnd); i++) {
+    for (let i = 0; i < fields.length; i++) {
       var startIdx = source.indexOf(starts[i], currentPos);
       if (starts[i] != "" && startIdx > -1) {
         currentPos = startIdx + starts[i].length;
+        somethingFound = true;
         
         // highlight the find
         var startStr = starts[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -41,12 +35,14 @@ var extractValues = (source, fields, starts, ends) => {
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
       } else {
         foundStart = false;
+        somethingFound = somethingFound || false;
       }
 
       var endIdx = source.indexOf(ends[i], currentPos);
       if (ends[i] != "" && endIdx > -1) {
         currentPos = endIdx + ends[i].length;
-        
+        somethingFound = true;
+
         // highlight the find
         var endStr = ends[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
         if (foundStart)
@@ -55,9 +51,9 @@ var extractValues = (source, fields, starts, ends) => {
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
         }
-
       } else {
         foundEnd = false;
+        somethingFound = somethingFound || false;
       }
 
       if (foundStart && foundEnd) {
@@ -67,7 +63,7 @@ var extractValues = (source, fields, starts, ends) => {
     if (row.length > 0) {
       data.push(row);
     }
-  }
+  } while (somethingFound)
 
   document.getElementById("sourceinputselectable").innerHTML = selectedSource;
 
