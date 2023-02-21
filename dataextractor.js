@@ -10,6 +10,12 @@ String.prototype.replaceAt = function(str, repl, idx) {
   return  result;
 }
 
+function getColor(){ 
+  return "hsl(" + 360 * Math.random() + ',' +
+             (25 + 70 * Math.random()) + '%,' + 
+             (85 + 10 * Math.random()) + '%)'
+}
+
 /*
   possible options for each field:
 
@@ -25,7 +31,7 @@ String.prototype.replaceAt = function(str, repl, idx) {
     - same as preceding following
 
 */
-var extractValues = (source, fields, starts, ends) => {
+var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
   var data = [];
   var somethingFound = false;
   var currentPos = 0;
@@ -45,7 +51,7 @@ var extractValues = (source, fields, starts, ends) => {
         
         // highlight the find
         var startStr = starts[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-        var repl = '<span style="background-color: red">' + startStr + '</span>';
+        var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
         selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
       } else {
@@ -62,7 +68,7 @@ var extractValues = (source, fields, starts, ends) => {
         var endStr = ends[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
         if (foundStart)
         {
-          var repl = '<span style="background-color: blue">' + endStr + '</span>';
+          var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
         }
@@ -100,16 +106,18 @@ var prepareExtract = () => {
   });
 
   var starts = [];
+  var startColors = [];
   var startsInputs = document.getElementsByName("start");
-
   Array.from(startsInputs).forEach(function(element) {
+    startColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
     starts.push(element.value);
   });
 
   var ends = [];
+  var endsColors = [];
   var endsInputs = document.getElementsByName("end");
-
   Array.from(endsInputs).forEach(function(element) {
+    endsColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
     ends.push(element.value);
   });
 
@@ -118,7 +126,7 @@ var prepareExtract = () => {
   document.getElementById("sourceinputselectable").innerHTML = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
   // extract
-  result = extractValues(source, fieldNames, starts, ends);
+  result = extractValues(source, fieldNames, starts, startColors, ends, endsColors);
   document.getElementById("csvinput").value = result;
 };
 
@@ -137,6 +145,10 @@ var addRow = (el) => {
   Array.from(deleteButtons).forEach(function(element) {
     element.addEventListener('click', deleteRow);
   });
+
+  // assign background color to expression inputs
+  newRow.querySelector("input[name='start']").style.cssText = 'background-color:' + getColor();
+  newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + getColor();
 
   var target = document.getElementById('fieldDefsRows');
   target.appendChild(newRow);
@@ -163,6 +175,7 @@ var deleteRow = (el) => {
   if (allDeletebuttons.length > 1) {
     el.currentTarget.closest(".fieldDefsRow").remove();
   }
+  prepareExtract();
 }
 
 // add onchange listener to all fields
@@ -179,6 +192,10 @@ var deleteButtons = document.getElementsByClassName('deleteRowButton');
 Array.from(deleteButtons).forEach(function(element) {
   element.addEventListener('click', deleteRow);
 });
+
+// assign background color to expression inputs
+document.getElementsByName("start")[0].style.cssText = 'background-color:' + getColor();
+document.getElementsByName("end")[0].style.cssText = 'background-color:' + getColor();
 
 document.getElementById("sourceinput").value = "<row><p>data1</p><p>data2</p></row><row><p>data3</p><p>data4</p></row>";
 
