@@ -10,10 +10,14 @@ String.prototype.replaceAt = function(str, repl, idx) {
   return  result;
 }
 
-function getColor(){ 
-  return "hsl(" + 360 * Math.random() + ',' +
-             (25 + 70 * Math.random()) + '%,' + 
-             (85 + 10 * Math.random()) + '%)'
+function getSisterColors() {
+  var hue = 360 * Math.random();
+  var sat = 25 + 70 * Math.random();
+  var col1 = "hsl(" + hue + ',' + sat + '%,' + 
+             (85 + 10 * Math.random()) + '%)';
+  var col2 = "hsl(" + hue + ',' + sat + '%,' + 
+             (55 + 10 * Math.random()) + '%)';
+  return [col1, col2]
 }
 
 /*
@@ -40,10 +44,10 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
 
   do {
     somethingFound = false;
-    var foundStart = true;
-    var foundEnd = true;
     var row = [];
     for (let i = 0; i < fields.length; i++) {
+      var foundStart = true;
+      var foundEnd = true;
       var startIdx = source.indexOf(starts[i], currentPos);
       if (starts[i] != "" && startIdx > -1) {
         currentPos = startIdx + starts[i].length;
@@ -147,8 +151,9 @@ var addRow = (el) => {
   });
 
   // assign background color to expression inputs
-  newRow.querySelector("input[name='start']").style.cssText = 'background-color:' + getColor();
-  newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + getColor();
+  var cols = getSisterColors();
+  newRow.querySelector("input[name='start']").style.cssText = 'background-color:' + cols[1];
+  newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + cols[0];
 
   var target = document.getElementById('fieldDefsRows');
   target.appendChild(newRow);
@@ -194,8 +199,9 @@ Array.from(deleteButtons).forEach(function(element) {
 });
 
 // assign background color to expression inputs
-document.getElementsByName("start")[0].style.cssText = 'background-color:' + getColor();
-document.getElementsByName("end")[0].style.cssText = 'background-color:' + getColor();
+var cols = getSisterColors();
+document.getElementsByName("start")[0].style.cssText = 'background-color:' + cols[1];
+document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[0];
 
 document.getElementById("sourceinput").value = "<row><p>data1</p><p>data2</p></row><row><p>data3</p><p>data4</p></row>";
 

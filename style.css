@@ -13,8 +13,12 @@
   flex-basis: 40%;
 }
 
-.fieldNameCol, .deleteButtonCol {
-  flex-basis: 10%;
+.fieldNameCol {
+  flex-basis: 14%;
+}
+
+.deleteButtonCol {
+  flex-basis: 6%;
 }
 
 p, input, textarea {
