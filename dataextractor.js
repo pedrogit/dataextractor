@@ -10,6 +10,21 @@ String.prototype.replaceAt = function(str, repl, idx) {
   return  result;
 }
 
+/*
+  possible options for each field:
+
+   - match value: match the value instead of it's delimiters. in that case it must be a regex
+
+  possible options for each search expression:
+
+   - regex: search the expression as a regex or not
+   - ignore case
+
+  possible options for each preceding search expression:
+
+    - same as preceding following
+
+*/
 var extractValues = (source, fields, starts, ends) => {
   var data = [];
   var somethingFound = false;

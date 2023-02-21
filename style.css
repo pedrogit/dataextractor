@@ -9,15 +9,11 @@
   padding: 5px;
 }
 
-.fieldNameCol {
-  flex-basis: 20%;
-}
-
 .expressionCol {
-  flex-basis: 35%;
+  flex-basis: 40%;
 }
 
-.deleteButtonCol {
+.fieldNameCol, .deleteButtonCol {
   flex-basis: 10%;
 }
 
