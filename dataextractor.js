@@ -1,39 +1,59 @@
+String.prototype.replaceAt = function(str, repl, idx) {
+  var firstpart = this.substring(0, idx);
+  var remainingpart = this.substring(idx, this.length);
+  var pos = remainingpart.indexOf(str);
+  var result = firstpart;
+  if (pos > -1) {
+    result = result + remainingpart.substring(0, pos) + repl;
+  }
+  result = result + remainingpart.substring(pos + str.length, remainingpart.length);
+  return  result;
+}
+
+/*
+var x = "aaayybbyyccyy".replaceAt("yy", "xx", -5);
+var x = "aaayybbyyccyy".replaceAt("yy", "xx", 0);
+var x = "aaayybbyyccyy".replaceAt("yy", "xx", 5);
+var x = "aaayybbyyccyy".replaceAt("yy", "xx", 10);
+var x = "aaayybbyyccyy".replaceAt("yy", "xx", 20);
+*/
+
 var extractValues = (source, fields, starts, ends) => {
   var data = [];
   //var found = source !== "" && starts[0] !== "" && ends[0] !== "";
   var foundStart = true;
   var foundEnd = true;
   var currentPos = 0;
-  var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');;
+  var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  var selPos = 0;
 
-  while (foundStart && foundEnd) {
+  while (foundStart || foundEnd) {
     var row = [];
     for (let i = 0; i < fields.length && (foundStart || foundEnd); i++) {
       var startIdx = source.indexOf(starts[i], currentPos);
       if (starts[i] != "" && startIdx > -1) {
         currentPos = startIdx + starts[i].length;
-        var startStr = source.substring(startIdx, currentPos).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
         
         // highlight the find
-        if (startStr != "")
-        {
-          selectedSource = selectedSource.replaceAll(startStr, '<span style="background-color:red">' + startStr + '</span>');
-          document.getElementById("sourceinputselectable").innerHTML = selectedSource;
-        }
+        var startStr = starts[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        var repl = '<span style="background-color: red">' + startStr + '</span>';
+        selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
+        selPos = selectedSource.indexOf(repl, selPos) + repl.length;
       } else {
         foundStart = false;
       }
 
       var endIdx = source.indexOf(ends[i], currentPos);
       if (ends[i] != "" && endIdx > -1) {
-        currentPos = endIdx;
-        var endStr = source.substring(endIdx, currentPos + ends[i].length).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        currentPos = endIdx + ends[i].length;
         
         // highlight the find
-        if (endStr != "")
+        var endStr = ends[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        if (foundStart)
         {
-          selectedSource = selectedSource.replaceAll(endStr, '<span style="background-color:blue">' + endStr + '</span>');
-          document.getElementById("sourceinputselectable").innerHTML = selectedSource;
+          var repl = '<span style="background-color: blue">' + endStr + '</span>';
+          selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
+          selPos = selectedSource.indexOf(repl, selPos) + repl.length;
         }
 
       } else {
@@ -48,6 +68,8 @@ var extractValues = (source, fields, starts, ends) => {
       data.push(row);
     }
   }
+
+  document.getElementById("sourceinputselectable").innerHTML = selectedSource;
 
   var resultCSV = fields.join(";") + ";\n";
   Array.from(data).forEach(function(datarow) {
