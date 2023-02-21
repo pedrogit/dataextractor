@@ -1,4 +1,4 @@
-#main, .fieldDefsRow {
+#main, #fieldDefsHeader, .fieldDefsRow, .addRowButton {
   display: flex;
   flex-direction: row;
   margin-top: 2px;
@@ -9,12 +9,16 @@
   padding: 5px;
 }
 
-.fieldName {
+.fieldNameCol {
   flex-basis: 20%;
 }
 
-.startExpression, .endExpression {
-  flex-basis: 40%;
+.expressionCol {
+  flex-basis: 35%;
+}
+
+.deleteButtonCol {
+  flex-basis: 10%;
 }
 
 p, input, textarea {
