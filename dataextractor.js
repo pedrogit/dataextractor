@@ -21,18 +21,24 @@ function getSisterColors() {
 }
 
 /*
-  possible options for each field:
+  possible options
+  
+  for each field:
 
    - match value: match the value instead of it's delimiters. in that case it must be a regex
 
-  possible options for each search expression:
+  for each search expression:
 
    - regex: search the expression as a regex or not
    - ignore case
 
-  possible options for each preceding search expression:
+  for each preceding search expression:
 
-    - same as preceding following
+  - same as preceding following
+
+  for source
+
+  - highlight data (instead of delimiters)
 
 */
 var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
