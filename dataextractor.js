@@ -1,4 +1,4 @@
-String.prototype.replaceAt = function(str, repl, idx) {
+String.prototype.replaceAt = function(str, repl, idx)  {
   var firstpart = this.substring(0, idx);
   var remainingpart = this.substring(idx, this.length);
   var pos = remainingpart.indexOf(str);
@@ -10,7 +10,7 @@ String.prototype.replaceAt = function(str, repl, idx) {
   return  result;
 }
 
-function getSisterColors() {
+getSisterColors = () => {
   var hue = 360 * Math.random();
   var sat = 25 + 70 * Math.random();
   var col1 = "hsl(" + hue + ',' + sat + '%,' + 
@@ -18,6 +18,37 @@ function getSisterColors() {
   var col2 = "hsl(" + hue + ',' + sat + '%,' + 
              (55 + 10 * Math.random()) + '%)';
   return [col1, col2]
+}
+
+// search for a string in normal or regex mode
+// returns an object
+//   str: the found string
+//   index: the position of the found string
+//   lastIndex: the position of the end of the found string
+String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
+  var result = {"str": null, index: 0, lastIndex: 0 };
+  pos = (pos < 0 ? 0 : pos);
+  if (regex && search != ''){
+    try {
+      const startRE = new RegExp(search, 'g');
+      foundArr = startRE.exec(this.substring(pos));
+      if (foundArr) {
+        result.str = foundArr[0];
+        result.index = pos + foundArr.index;
+        result.lastIndex = pos + startRE.lastIndex;
+      }
+    } catch(e) {
+    }
+  }
+  else if (search != '') {
+    var idx = this.substring(pos).indexOf(search);
+    if (idx > -1) {
+      result.str = search;
+      result.index = pos + idx;
+      result.lastIndex  = pos + idx + search.length;
+    }
+  }
+  return result;
 }
 
 /*
@@ -52,43 +83,42 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
     somethingFound = false;
     var row = [];
     for (let i = 0; i < fields.length; i++) {
-      var foundStart = true;
-      var foundEnd = true;
-      var startIdx = source.indexOf(starts[i], currentPos);
-      if (starts[i] != "" && startIdx > -1) {
-        currentPos = startIdx + starts[i].length;
+
+      // find the starting delimiter
+      var startObj = source.findFirstAt(starts[i], currentPos, true);
+      if (startObj.str) {
+        currentPos = startObj.lastIndex;
         somethingFound = true;
         
         // highlight the find
-        var startStr = starts[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
         var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
         selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
       } else {
-        foundStart = false;
         somethingFound = somethingFound || false;
       }
 
-      var endIdx = source.indexOf(ends[i], currentPos);
-      if (ends[i] != "" && endIdx > -1) {
-        currentPos = endIdx + ends[i].length;
+      // find the ending delimiter
+      var endObj = source.findFirstAt(ends[i], currentPos, true);
+      if (endObj.str) {
+        currentPos = endObj.lastIndex;
         somethingFound = true;
 
         // highlight the find
-        var endStr = ends[i].replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-        if (foundStart)
+        var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        if (startObj.str)
         {
           var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
         }
       } else {
-        foundEnd = false;
         somethingFound = somethingFound || false;
       }
 
-      if (foundStart && foundEnd) {
-        row.push(source.substring(startIdx + starts[i].length, endIdx));
+      if (startObj.str && endObj.str) {
+        row.push(source.substring(startObj.lastIndex, endObj.index,));
       }
     }
     if (row.length > 0) {
@@ -209,6 +239,6 @@ var cols = getSisterColors();
 document.getElementsByName("start")[0].style.cssText = 'background-color:' + cols[1];
 document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[0];
 
-document.getElementById("sourceinput").value = "<row><p>data1</p><p>data2</p></row><row><p>data3</p><p>data4</p></row>";
+document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p>";
 
 prepareExtract();
