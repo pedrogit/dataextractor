@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
   <div id=main>
     <div id=dataDefinition>
       <div id=fieldDefs>
         <div id=fieldDefsHeader>
           <p class=fieldNameCol>Field Name</p>
-          <p class=expressionCol>Preceding RegEx</p>
-          <p class=expressionCol>Following RegEx</p>
+          <p class=expressionCol>Preceding RegEx Delimiter</p>
+          <p class=expressionCol>Following RegEx Delimiter</p>
           <p class=deleteButtonCol>&nbsp;</p>
         </div>
         <div id=fieldDefsRows>
@@ -40,11 +42,9 @@
       </div>
     </div>
     <div id=dataSource>
-      <div id=textSource>
-        <p>Source</p>
-        <textarea id=sourceinput class=changingfield></textarea>
-        <div id=sourceinputselectable></div>
-      </div>
+      <p>Source</p>
+      <textarea id=sourceinput class=changingfield></textarea>
+      <div id=sourceinputselectable></div>
     </div>
   </div>
 </body>
