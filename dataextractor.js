@@ -52,24 +52,41 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
 }
 
 /*
+  features
+
+    - save/load field definition to/from CSV file
+    - add list predefined field definition (CV Canadien publications)
+
+
   possible options
   
-  for each field:
+    for resulting CSV
 
-   - match value: match the value instead of it's delimiters. in that case it must be a regex
+    - row separator (, or ; or \t)
+    - quote strings (always, when necessary)
+    - wordwrap
 
-  for each search expression:
+    for each field:
 
-   - regex: search the expression as a regex or not
-   - ignore case
+    - match value: match the value instead of it's delimiters. In that case it must be a regex.
+    - trim extra spaces (space, \r, \n, \t)
+    - change case (uppercase, lowercase, sentence)
 
-  for each preceding search expression:
+    for each search expression:
 
-  - same as preceding following
+    - regex: search the expression as a regex or not
+    - ignore case
 
-  for source
+    for each preceding search expression:
 
-  - highlight data (instead of delimiters)
+    - same as preceding following
+
+    for source
+
+    - highlight data (instead of delimiters)
+    - wordwrap
+    - search in source with find next and find previous buttons
+    - highlight matching locations in the scrolling bar
 
 */
 var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
@@ -118,7 +135,9 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
       }
 
       if (startObj.str && endObj.str) {
-        row.push(source.substring(startObj.lastIndex, endObj.index,));
+        var dataStr = source.substring(startObj.lastIndex, endObj.index)
+        //dataStr = dataStr.replaceAll(new RegExp('[\\s\\n\\r\\t]+', 'g'), ' ');
+        row.push(dataStr);
       }
     }
     if (row.length > 0) {
@@ -239,6 +258,6 @@ var cols = getSisterColors();
 document.getElementsByName("start")[0].style.cssText = 'background-color:' + cols[1];
 document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[0];
 
-document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p>";
+document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p></row><row><p1>data3</p><p2>data4</p></row>";
 
 prepareExtract();
