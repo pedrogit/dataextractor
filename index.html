@@ -32,8 +32,11 @@
             </div>
           </div>
         </div>
-        <div class="addRowButton">
-          <button id="addRowButton">Add field</button>
+        <div id="fieldDefToolBar">
+          <button id=addRowButton class=fieldDefToolBarButton>Add field</button>
+          <button id=saveFieldDefButton class=fieldDefToolBarButton>Export Field Def</button>
+          <button id=loadFieldDefButton class=fieldDefToolBarButton onclick="document.getElementById('loadFieldDefInput').click()">Import Field Def</button>
+          <input type="file" style="visibility: hidden;width: 2px;" id=loadFieldDefInput class=fieldDefToolBarButton value />
         </div>
       </div>
       <div id=resultingCVS>

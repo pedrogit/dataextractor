@@ -71,6 +71,7 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
     - match value: match the value instead of it's delimiters. In that case it must be a regex.
     - trim extra spaces (space, \r, \n, \t)
     - change case (uppercase, lowercase, sentence)
+    - randomize color
 
     for each search expression:
 
@@ -155,41 +156,47 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
   return resultCSV;
 }
 
-var prepareExtract = () => {
-  var result = '';
-  var fieldNames = [];
+var getFieldDef = () => {
+  var fieldDef = {};
+  fieldDef.fieldNames = [];
   var fieldnameInputs = document.getElementsByName("fieldname");
 
   Array.from(fieldnameInputs).forEach(function(element) {
-    fieldNames.push(element.value);
+    fieldDef.fieldNames.push(element.value);
   });
 
-  var starts = [];
-  var startColors = [];
+  fieldDef.starts = [];
+  fieldDef.startColors = [];
   var startsInputs = document.getElementsByName("start");
   Array.from(startsInputs).forEach(function(element) {
-    startColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
-    starts.push(element.value);
+    fieldDef.startColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
+    fieldDef.starts.push(element.value);
   });
 
-  var ends = [];
-  var endsColors = [];
+  fieldDef.ends = [];
+  fieldDef.endsColors = [];
   var endsInputs = document.getElementsByName("end");
   Array.from(endsInputs).forEach(function(element) {
-    endsColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
-    ends.push(element.value);
+    fieldDef.endsColors.push(window.getComputedStyle(element).getPropertyValue('background-color')); 
+    fieldDef.ends.push(element.value);
   });
+
+  return fieldDef;
+}
+
+var prepareExtract = () => {
+  var fieldDef = getFieldDef();
 
   var source = document.getElementById("sourceinput").value;
 
   document.getElementById("sourceinputselectable").innerHTML = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
   // extract
-  result = extractValues(source, fieldNames, starts, startColors, ends, endsColors);
+  var result = extractValues(source, fieldDef.fieldNames, fieldDef.starts, fieldDef.startColors, fieldDef.ends, fieldDef.endsColors);
   document.getElementById("csvinput").value = result;
 };
 
-var addRow = (el) => {
+var addRow = () => {
   var newRow = document.getElementsByClassName("fieldDefsRow")[0].cloneNode(true);
 
   // reset the inputs and add the onchange event listener
@@ -225,6 +232,131 @@ var addRow = (el) => {
   prepareExtract();
 }
 
+var saveFieldDef = () => {
+  var fieldDef = getFieldDef();
+  var fieldDefCSV = '';
+
+  for (const prop in fieldDef) {
+    if (Object.hasOwn(fieldDef, prop)) {
+      fieldDefCSV += prop + ";"
+    }
+  }
+  fieldDefCSV += "\n";
+
+  for (let i = 0; i < fieldDef['fieldNames'].length; i++) {
+    for (const prop in fieldDef) {
+      if (Object.hasOwn(fieldDef, prop)) {
+        fieldDefCSV += fieldDef[prop][i] + ";"
+      }
+    }
+    fieldDefCSV += "\n";
+  }
+  
+  var csvblob = new Blob([fieldDefCSV], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.download = 'fieldDefinition.csv';
+  a.href = window.URL.createObjectURL(csvblob);
+  a.click();
+}
+
+// borrowed from https://stackoverflow.com/questions/1293147/how-to-parse-csv-data
+function parseCSV(str, sep = ',') {
+  var arr = [];
+  var quote = false;  // 'true' means we're inside a quoted field
+
+  // Iterate over each character, keep track of current row and column (of the returned array)
+  for (var row = 0, col = 0, c = 0; str && c < str.length; c++) {
+      var cc = str[c], nc = str[c+1];        // Current character, next character
+
+      // If the current character is a not a newline (LF or CR) and we are not in a quoted field create a new column
+      if (cc != '\r' && cc != '\n' && !quote) {
+        arr[row] = arr[row] || [];             // Create a new row if necessary
+        arr[row][col] = arr[row][col] || '';   // Create a new column (start with empty string) if necessary
+      }
+
+      // If the current character is a quotation mark, and we're inside a
+      // quoted field, and the next character is also a quotation mark,
+      // add a quotation mark to the current column and skip the next character
+      if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+
+      // If it's just one quotation mark, begin/end quoted field
+      if (cc == '"') { quote = !quote; continue; }
+
+      // If it's a comma and we're not in a quoted field, move on to the next column
+      if (cc == sep && !quote) { ++col; continue; }
+
+      // If it's a newline (CRLF) and we're not in a quoted field, skip the next character
+      // and move on to the next row and move to column 0 of that new row
+      if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+
+      // If it's a newline (LF or CR) and we're not in a quoted field,
+      // move on to the next row and move to column 0 of that new row
+      if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+      if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+
+      // Otherwise, append the current character to the current column
+      arr[row][col] += cc;
+  }
+  return arr;
+}
+/* 
+var x = parseCSV('a\nb');
+x = parseCSV('a\nb\n');
+x = parseCSV('a\nb\n\n');
+x = parseCSV('a,\nb,');
+x = parseCSV('a,\nb,\n');
+x = parseCSV('a,\nb,\n\n');
+x = parseCSV();
+*/
+
+var setFieldsFromCSV = (csv) => {
+  // validate the csv
+  //if (csv[0] != ["fieldNames", "starts", "startColors", "ends", "endsColors"]) {
+  if (JSON.stringify(csv[0]) !== JSON.stringify(["fieldNames", "starts", "startColors", "ends", "endsColors"])) {
+    alert('Invalid CSV');
+    return;
+  }
+  // make sure the number of field in the interface is ok
+  var allDeleteButtons = document.getElementsByClassName('deleteRowButton');
+  while (allDeleteButtons.length != csv.length - 1) {
+    if (allDeleteButtons.length < csv.length - 1) {
+      // add a row
+      addRow();
+    }
+    else {
+      // delete a row
+      allDeleteButtons[0].click();
+    }
+    allDeleteButtons = document.getElementsByClassName('deleteRowButton');
+  }
+
+  // distribute the values
+  var arrIdx = 1;
+  Array.from(allDeleteButtons).forEach(function(deleteButton) {
+    var parent = deleteButton.closest(".fieldDefsRow");
+    parent.querySelector("input[name='fieldname']").value = csv[arrIdx][0];
+    parent.querySelector("input[name='start']").value = csv[arrIdx][1];
+    parent.querySelector("input[name='start']").style.cssText = 'background-color:' + csv[arrIdx][2];
+    parent.querySelector("input[name='end']").value = csv[arrIdx][3];
+    parent.querySelector("input[name='end']").style.cssText = 'background-color:' + csv[arrIdx][4];
+    arrIdx++;
+  });
+}
+
+var loadFieldDef = (e) => {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(input) {
+    setFieldsFromCSV(parseCSV(input.target.result, ';'));
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+
 var deleteRow = (el) => {
   var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
   if (allDeletebuttons.length == 2) {
@@ -252,6 +384,9 @@ var deleteButtons = document.getElementsByClassName('deleteRowButton');
 Array.from(deleteButtons).forEach(function(element) {
   element.addEventListener('click', deleteRow);
 });
+
+document.getElementById('saveFieldDefButton').addEventListener("click", saveFieldDef);
+document.getElementById('loadFieldDefInput').addEventListener("change", loadFieldDef);
 
 // assign background color to expression inputs
 var cols = getSisterColors();
