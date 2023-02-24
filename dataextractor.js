@@ -115,18 +115,14 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
         var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
         selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
-      }
 
-      // find the ending delimiter
-      var endObj = source.findFirstAt(ends[i], currentPos, true);
-      if (endObj.str) {
-        currentPos = endObj.lastIndex;
-        delimiterFound = true;
+        // find the ending delimiter
+        var endObj = source.findFirstAt(ends[i], currentPos, true);
+        if (endObj.str) {
+          currentPos = endObj.lastIndex;
 
-        // highlight the find
-        var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
-        if (startObj.str)
-        {
+          // highlight the find
+          var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
           var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
