@@ -73,6 +73,8 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
     - change case (uppercase, lowercase, sentence)
     - randomize color
     - move up and down buttons
+    - make first delimiter necessary to create a record (or not)
+    - make first value necessary to create a record (or not)
 
     for each search expression:
 
@@ -101,6 +103,7 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
   do {
     delimiterFound = false;
     valueFound = false;
+    firstDelimiterFound = false;
     var row = [];
     for (let i = 0; i < fields.length; i++) {
 
@@ -109,6 +112,9 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
       if (startObj.str) {
         currentPos = startObj.lastIndex;
         delimiterFound = true;
+        if (i == 0) {
+          firstDelimiterFound = true;
+        }
         
         // highlight the find
         var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
@@ -140,7 +146,7 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
       }
       row.push(dataStr);
     }
-    if (valueFound) {
+    if (firstDelimiterFound && valueFound) {
       data.push(row);
     }
   } while (delimiterFound)
