@@ -1,3 +1,19 @@
+var predefinedFieldSets = {
+  "CVCanadienArtilePeerReviewed": `fieldNames;starts;startColors;ends;endsColors;
+title;label="Articles de revue" recordId="[a-z0-9]*?">s*<field id="[a-z0-9]*?" label="Titre de l'article">s*<value type="String">;rgb(189, 200, 124);</value>;rgb(244, 246, 233);
+journal;label="Revue">s*<value type="String">;rgb(63, 245, 171);</value>;rgb(220, 253, 240);
+volume;label="Volume">s*<value type="String">;rgb(219, 88, 142);</value>;rgb(246, 212, 226);
+numero;label="Numéro">s*<value type="String">;rgb(98, 134, 214);</value>;rgb(208, 219, 243);
+pages;label="Plage de page">s*<value type="String">;rgb(84, 237, 242);</value>;rgb(226, 252, 253);
+year;label="Année">s*<value format="yyyy" type="Year">;rgb(193, 120, 179);</value>;rgb(234, 209, 229);
+publisher;label="Éditeur">s*<value type="String">;rgb(82, 188, 247);</value>;rgb(197, 233, 252);
+url;label="URL">s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
+author;label="Auteurs">s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
+editor;label="Éditeurs">s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
+doi;label="DOI">s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`
+}
+
+
 String.prototype.replaceAt = function(str, repl, idx)  {
   var firstpart = this.substring(0, idx);
   var remainingpart = this.substring(idx, this.length);
@@ -208,7 +224,7 @@ var addRow = () => {
   var changingfields = newRow.getElementsByClassName("changingfield");
   Array.from(changingfields).forEach(function(element) {
     element.addEventListener('input', prepareExtract);
-    element.value = "";
+    element.value = '';
   });
 
   // add the delete event listener
@@ -423,6 +439,13 @@ var deleteRow = (el) => {
   prepareExtract();
 }
 
+var loadPredefinedFieldSet = () => {
+  var selected = document.getElementById('predefinedFieldSetsSelect').value;
+  if (predefinedFieldSets[selected])  {
+    setFieldsFromCSV(parseCSV(predefinedFieldSets[selected], ';'));
+  }
+}
+
 // add onchange listener to all fields
 var changingfields = document.getElementsByClassName("changingfield");
 Array.from(changingfields).forEach(function(element) {
@@ -440,6 +463,8 @@ Array.from(deleteButtons).forEach(function(element) {
 
 document.getElementById('saveFieldDefButton').addEventListener("click", saveFieldDef);
 document.getElementById('loadFieldDefInput').addEventListener("change", loadFieldDef);
+
+document.getElementById('loadPredefFieldDefButton').addEventListener("click", loadPredefinedFieldSet);
 
 // assign background color to expression inputs
 var cols = getSisterColors();

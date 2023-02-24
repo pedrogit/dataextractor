@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
+  <title>CEF Data Extractor</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 
 <body>
@@ -11,21 +13,21 @@
     <div id=dataDefinition>
       <div id=fieldDefs>
         <div id=fieldDefsHeader>
-          <p class=fieldNameCol>Field Name</p>
-          <p class=expressionCol>Opening RegEx Delimiter</p>
-          <p class=expressionCol>Closing RegEx Delimiter</p>
-          <p class=deleteButtonCol>&nbsp;</p>
+          <p class="fieldNameCol boldHeader">Field Name</p>
+          <p class="expressionCol boldHeader">Opening RegEx Delimiter</p>
+          <p class="expressionCol boldHeader">Closing RegEx Delimiter</p>
+          <p class="deleteButtonCol boldHeader">&nbsp;</p>
         </div>
         <div id=fieldDefsRows>
           <div class=fieldDefsRow>
             <div class=fieldNameCol>
-              <input class=changingfield name=fieldname value="field1" />
+              <input class=changingfield name=fieldname value="field1">
             </div>
             <div class=expressionCol>
-              <input class=changingfield name=start />
+              <input class=changingfield name=start>
             </div>
             <div class=expressionCol>
-              <input class=changingfield name=end />
+              <input class=changingfield name=end>
             </div>
             <div class=deleteButtonCol>
               <button class=deleteRowButton disabled>Delete</button>
@@ -33,24 +35,31 @@
           </div>
         </div>
         <div id="fieldDefToolBar">
-          <button id=addRowButton class=fieldDefToolBarButton>Add field</button>
-          <button id=saveFieldDefButton class=fieldDefToolBarButton>Export Field Def</button>
-          <button id=loadFieldDefButton class=fieldDefToolBarButton onclick="document.getElementById('loadFieldDefInput').click()">Import Field Def</button>
-          <input type="file" style="display:none;" id=loadFieldDefInput class=fieldDefToolBarButton value />
+          <button id=addRowButton>Add field</button>
+          <button id=saveFieldDefButton>Export Field Def</button>
+          <button id=loadFieldDefButton onclick="document.getElementById('loadFieldDefInput').click()">Import Field Def</button>
+          <input type="file" style="display:none;" id=loadFieldDefInput>
         </div>
       </div>
+      <div id="predefinedFieldSets">
+        <p class=boldHeader>Predefined Field Sets</p>
+        <select id=predefinedFieldSetsSelect>
+          <option>None</option>
+          <option value="CVCanadienArtilePeerReviewed">CVCanadien - Articles Peer Reviewed</option>
+        </select>
+        <button id=loadPredefFieldDefButton>Load</button>
+      </div>
       <div id=resultingCVS>
-        <p>Resulting CSV</p>
+        <p class=boldHeader>Resulting CSV</p>
         <textarea id=csvinput></textarea>
       </div>
     </div>
     <div id=dataSource>
-      <p>Source</p>
+      <p class=boldHeader>Source</p>
       <textarea id=sourceinput class=changingfield></textarea>
       <div id=sourceinputselectable></div>
     </div>
   </div>
+  <script src="dataextractor.js"></script>
 </body>
-<script src="dataextractor.js"></script>
-
 </html>
