@@ -57,10 +57,14 @@ textarea {
   box-sizing: border-box;
 }
 
-#sourceinput,
 #csvinput,
 #sourceinputselectable {
   min-height: 200px;
+  resize: vertical;
+}
+
+#sourceinput {
+  min-height: 100px;
   resize: vertical;
 }
 

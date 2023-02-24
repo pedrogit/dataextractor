@@ -16,7 +16,7 @@ getSisterColors = () => {
   var col1 = "hsl(" + hue + ',' + sat + '%,' + 
              (85 + 10 * Math.random()) + '%)';
   var col2 = "hsl(" + hue + ',' + sat + '%,' + 
-             (55 + 10 * Math.random()) + '%)';
+             (65 + 10 * Math.random()) + '%)';
   return [col1, col2]
 }
 
@@ -72,6 +72,7 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
     - trim extra spaces (space, \r, \n, \t)
     - change case (uppercase, lowercase, sentence)
     - randomize color
+    - move up and down buttons
 
     for each search expression:
 
@@ -92,13 +93,14 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
 */
 var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
   var data = [];
-  var somethingFound = false;
+  var delimiterFound = false;
   var currentPos = 0;
   var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
   var selPos = 0;
 
   do {
-    somethingFound = false;
+    delimiterFound = false;
+    valueFound = false;
     var row = [];
     for (let i = 0; i < fields.length; i++) {
 
@@ -106,22 +108,22 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
       var startObj = source.findFirstAt(starts[i], currentPos, true);
       if (startObj.str) {
         currentPos = startObj.lastIndex;
-        somethingFound = true;
+        delimiterFound = true;
         
         // highlight the find
         var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
         var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
         selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
-      } else {
-        somethingFound = somethingFound || false;
-      }
+      } /*else {
+        delimiterFound = delimiterFound || false;
+      }*/
 
       // find the ending delimiter
       var endObj = source.findFirstAt(ends[i], currentPos, true);
       if (endObj.str) {
         currentPos = endObj.lastIndex;
-        somethingFound = true;
+        delimiterFound = true;
 
         // highlight the find
         var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -130,21 +132,27 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
           var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
-        }
-      } else {
-        somethingFound = somethingFound || false;
-      }
 
+          valueFound = true;
+        }
+      } /*else {
+        delimiterFound = delimiterFound || false;
+      }*/
+      var dataStr = '';
       if (startObj.str && endObj.str) {
-        var dataStr = source.substring(startObj.lastIndex, endObj.index)
+        var dataStr = source.substring(startObj.lastIndex, endObj.index < startObj.lastIndex ? startObj.lastIndex : endObj.index)
         //dataStr = dataStr.replaceAll(new RegExp('[\\s\\n\\r\\t]+', 'g'), ' ');
-        row.push(dataStr);
+        if (dataStr.indexOf(';') > -1 || dataStr.indexOf('\n') > -1) {
+          dataStr = '"' + dataStr.replaceAll('"', '""') + '"';
+        }
       }
+      row.push(dataStr);
     }
-    if (row.length > 0) {
+    //if (row.length == fields.length) {
+    if (valueFound) {
       data.push(row);
     }
-  } while (somethingFound)
+  } while (delimiterFound)
 
   document.getElementById("sourceinputselectable").innerHTML = selectedSource;
 
@@ -263,15 +271,16 @@ var saveFieldDef = () => {
 function parseCSV(str, sep = ',') {
   var arr = [];
   var quote = false;  // 'true' means we're inside a quoted field
-
+  var newcol = false;
   // Iterate over each character, keep track of current row and column (of the returned array)
   for (var row = 0, col = 0, c = 0; str && c < str.length; c++) {
       var cc = str[c], nc = str[c+1];        // Current character, next character
 
       // If the current character is a not a newline (LF or CR) and we are not in a quoted field create a new column
-      if (cc != '\r' && cc != '\n' && !quote) {
+      if ((cc != '\r' && cc != '\n' && !quote) || newcol) {
         arr[row] = arr[row] || [];             // Create a new row if necessary
         arr[row][col] = arr[row][col] || '';   // Create a new column (start with empty string) if necessary
+        newcol = false;
       }
 
       // If the current character is a quotation mark, and we're inside a
@@ -280,7 +289,12 @@ function parseCSV(str, sep = ',') {
       if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
 
       // If it's just one quotation mark, begin/end quoted field
-      if (cc == '"') { quote = !quote; continue; }
+      //if (cc == '"') { quote = !quote; continue; }
+      //if (cc == sep && nc == '"' && !quote) { quote = true; ++col; ++c; continue; }
+      if (cc == sep && nc == '"' && !quote) { quote = true; newcol = true; ++col; ++c; continue; }
+    
+      if (cc == '"' && (nc == '\n' || nc == '\r') && quote) {quote = false; ++row; col = 0; ++c; continue;}
+      if (cc == '"' && (nc == sep || nc == undefined) && quote) { quote = false; ++col; ++c; continue; }
 
       // If it's a comma and we're not in a quoted field, move on to the next column
       if (cc == sep && !quote) { ++col; continue; }
@@ -299,14 +313,57 @@ function parseCSV(str, sep = ',') {
   }
   return arr;
 }
-/* 
-var x = parseCSV('a\nb');
+
+/*
+// basic tests
+var x = parseCSV('a,bx,c,\n1,2,3,');
+x = parseCSV('a\nb');
 x = parseCSV('a\nb\n');
 x = parseCSV('a\nb\n\n');
+
 x = parseCSV('a,\nb,');
 x = parseCSV('a,\nb,\n');
 x = parseCSV('a,\nb,\n\n');
+
+// nothing
 x = parseCSV();
+x = parseCSV('');
+
+// quote alone (no quoted string)
+x = parseCSV('a,b,c,\n1,2",3,');
+
+// quote alone before end of line (\n)
+x = parseCSV('a,b"\n1,2');
+
+// quote alone before end of line (\r)
+x = parseCSV('a,b"\r1,2');
+
+// quote alone at the end of file
+x = parseCSV('a,b,\n1,2"');
+
+// quoted string
+x = parseCSV('a,b,c,\n1,"2",3,');
+
+// true quoted string before \n
+x = parseCSV('a,"b"\n1,2');
+
+// true quoted string having a \n
+x = parseCSV('a,"b\nc"\n1,2');
+
+// true quoted string having an escaped quote
+x = parseCSV('a,"b""c"\n1,2');
+
+// true quoted string having an escaped quote
+x = parseCSV('a,"b"""\n1,2');
+
+// true quoted string having an escaped quote
+x = parseCSV('a,"b"","\n1,2');
+
+// true quoted string having an escaped quote
+x = parseCSV('a,"b"","\n1,2');
+
+// true quoted string having an escaped quote
+x = parseCSV('a,""","\n1,2');
 */
 
 var setFieldsFromCSV = (csv) => {
@@ -355,7 +412,6 @@ var loadFieldDef = (e) => {
   };
   reader.readAsText(file);
 }
-
 
 var deleteRow = (el) => {
   var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
