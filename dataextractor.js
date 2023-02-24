@@ -95,7 +95,7 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
   var data = [];
   var delimiterFound = false;
   var currentPos = 0;
-  var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
   var selPos = 0;
 
   do {
@@ -111,13 +111,11 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
         delimiterFound = true;
         
         // highlight the find
-        var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
         var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
         selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
         selPos = selectedSource.indexOf(repl, selPos) + repl.length;
-      } /*else {
-        delimiterFound = delimiterFound || false;
-      }*/
+      }
 
       // find the ending delimiter
       var endObj = source.findFirstAt(ends[i], currentPos, true);
@@ -126,18 +124,15 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
         delimiterFound = true;
 
         // highlight the find
-        var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+        var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
         if (startObj.str)
         {
           var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
           selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
           selPos = selectedSource.indexOf(repl, selPos) + repl.length;
-
-          valueFound = true;
         }
-      } /*else {
-        delimiterFound = delimiterFound || false;
-      }*/
+      }
+
       var dataStr = '';
       if (startObj.str && endObj.str) {
         var dataStr = source.substring(startObj.lastIndex, endObj.index < startObj.lastIndex ? startObj.lastIndex : endObj.index)
@@ -145,10 +140,10 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
         if (dataStr.indexOf(';') > -1 || dataStr.indexOf('\n') > -1) {
           dataStr = '"' + dataStr.replaceAll('"', '""') + '"';
         }
+        valueFound = true;
       }
       row.push(dataStr);
     }
-    //if (row.length == fields.length) {
     if (valueFound) {
       data.push(row);
     }
