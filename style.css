@@ -59,7 +59,7 @@ textarea {
   box-sizing: border-box;
 }
 
-#csvinput,
+#resultingCSVinput,
 #sourceinputselectable {
   min-height: 200px;
   resize: vertical;

@@ -214,7 +214,7 @@ var prepareExtract = () => {
 
   // extract
   var result = extractValues(source, fieldDef.fieldNames, fieldDef.starts, fieldDef.startColors, fieldDef.ends, fieldDef.endsColors);
-  document.getElementById("csvinput").value = result;
+  document.getElementById("resultingCVSinput").value = result;
 };
 
 var addRow = () => {
@@ -276,6 +276,16 @@ var saveFieldDef = () => {
   var csvblob = new Blob([fieldDefCSV], { type: 'text/csv' });
   var a = document.createElement('a');
   a.download = 'fieldDefinition.csv';
+  a.href = window.URL.createObjectURL(csvblob);
+  a.click();
+}
+
+var saveCSVResults = () => {
+  var source = document.getElementById("resultingCVSinput").value;
+  
+  var csvblob = new Blob([source], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.download = 'resultingCSV.csv';
   a.href = window.URL.createObjectURL(csvblob);
   a.click();
 }
@@ -465,6 +475,7 @@ document.getElementById('saveFieldDefButton').addEventListener("click", saveFiel
 document.getElementById('loadFieldDefInput').addEventListener("change", loadFieldDef);
 
 document.getElementById('loadPredefFieldDefButton').addEventListener("click", loadPredefinedFieldSet);
+document.getElementById('saveResCSVButton').addEventListener("click", saveCSVResults);
 
 // assign background color to expression inputs
 var cols = getSisterColors();
