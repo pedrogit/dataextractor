@@ -214,7 +214,7 @@ var prepareExtract = () => {
 
   // extract
   var result = extractValues(source, fieldDef.fieldNames, fieldDef.starts, fieldDef.startColors, fieldDef.ends, fieldDef.endsColors);
-  document.getElementById("resultingCVSinput").value = result;
+  document.getElementById("resultingCSVinput").value = result;
 };
 
 var addRow = () => {
@@ -281,7 +281,7 @@ var saveFieldDef = () => {
 }
 
 var saveCSVResults = () => {
-  var source = document.getElementById("resultingCVSinput").value;
+  var source = document.getElementById("resultingCSVinput").value;
   
   var csvblob = new Blob([source], { type: 'text/csv' });
   var a = document.createElement('a');
