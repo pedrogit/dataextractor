@@ -421,6 +421,8 @@ var setFieldsFromCSV = (csv) => {
     parent.querySelector("input[name='end']").style.cssText = 'background-color:' + csv[arrIdx][4];
     arrIdx++;
   });
+
+  prepareExtract();
 }
 
 var loadFieldDef = (e) => {
