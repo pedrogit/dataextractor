@@ -383,7 +383,7 @@ var addRow = (target) => {
   newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + cols[0];
 
   var parent = document.getElementById('fieldDefsRows');
-  if (target.currentTarget.id == "addRowButton") {
+  if (!target || target.currentTarget.id == "addRowButton") {
     parent.appendChild(newRow);
   } else {
     parent.insertBefore(newRow, target.currentTarget.closest(".fieldDefsRow"));
