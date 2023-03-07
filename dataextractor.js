@@ -217,79 +217,6 @@ var prepareExtract = () => {
   document.getElementById("resultingCSVinput").value = result;
 };
 
-var addRow = () => {
-  var newRow = document.getElementsByClassName("fieldDefsRow")[0].cloneNode(true);
-
-  // reset the inputs and add the onchange event listener
-  var changingfields = newRow.getElementsByClassName("changingfield");
-  Array.from(changingfields).forEach(function(element) {
-    element.addEventListener('input', prepareExtract);
-    element.value = '';
-  });
-
-  // add the delete event listener
-  var deleteButtons = newRow.getElementsByClassName('deleteRowButton');
-  Array.from(deleteButtons).forEach(function(element) {
-    element.addEventListener('click', deleteRow);
-  });
-
-  // assign background color to expression inputs
-  var cols = getSisterColors();
-  newRow.querySelector("input[name='start']").style.cssText = 'background-color:' + cols[1];
-  newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + cols[0];
-
-  var target = document.getElementById('fieldDefsRows');
-  target.appendChild(newRow);
-
-  // increment the field name
-  newRow.querySelector("input[name='fieldname']").value = "field" + target.childElementCount;
-
-  // enable the delete row button
-  var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
-  Array.from(allDeletebuttons).forEach(function(element) {
-    element.removeAttribute('disabled');
-  });
-
-  prepareExtract();
-}
-
-var saveFieldDef = () => {
-  var fieldDef = getFieldDef();
-  var fieldDefCSV = '';
-
-  for (const prop in fieldDef) {
-    if (Object.hasOwn(fieldDef, prop)) {
-      fieldDefCSV += prop + ";"
-    }
-  }
-  fieldDefCSV += "\n";
-
-  for (let i = 0; i < fieldDef['fieldNames'].length; i++) {
-    for (const prop in fieldDef) {
-      if (Object.hasOwn(fieldDef, prop)) {
-        fieldDefCSV += fieldDef[prop][i] + ";"
-      }
-    }
-    fieldDefCSV += "\n";
-  }
-  
-  var csvblob = new Blob([fieldDefCSV], { type: 'text/csv' });
-  var a = document.createElement('a');
-  a.download = 'fieldDefinition.csv';
-  a.href = window.URL.createObjectURL(csvblob);
-  a.click();
-}
-
-var saveCSVResults = () => {
-  var source = document.getElementById("resultingCSVinput").value;
-  
-  var csvblob = new Blob([source], { type: 'text/csv' });
-  var a = document.createElement('a');
-  a.download = 'resultingCSV.csv';
-  a.href = window.URL.createObjectURL(csvblob);
-  a.click();
-}
-
 // borrowed from https://stackoverflow.com/questions/1293147/how-to-parse-csv-data
 function parseCSV(str, sep = ',') {
   var arr = [];
@@ -425,19 +352,57 @@ var setFieldsFromCSV = (csv) => {
   prepareExtract();
 }
 
-var loadFieldDef = (e) => {
-  var file = e.target.files[0];
-  if (!file) {
-    return;
+//////////////////////////////////////////////////////////////////////////////
+// Add Row
+// add a field row before the target if it is provided, otherwise at the end
+var addRow = (target) => {
+  var newRow = document.getElementsByClassName("fieldDefsRow")[0].cloneNode(true);
+
+  // reset the inputs and add the onchange event listener
+  var changingfields = newRow.getElementsByClassName("changingfield");
+  Array.from(changingfields).forEach(function(element) {
+    element.addEventListener('input', prepareExtract);
+    element.value = '';
+  });
+
+  // add the addRow event listener
+  var addRowBeforeButtons = newRow.getElementsByClassName('addBeforeRowButton');
+  Array.from(addRowBeforeButtons).forEach(function(element) {
+    element.addEventListener('click', addRow);
+  });
+
+  // add the delete event listener
+  var deleteButtons = newRow.getElementsByClassName('deleteRowButton');
+  Array.from(deleteButtons).forEach(function(element) {
+    element.addEventListener('click', deleteRow);
+  });
+
+  // assign background color to expression inputs
+  var cols = getSisterColors();
+  newRow.querySelector("input[name='start']").style.cssText = 'background-color:' + cols[1];
+  newRow.querySelector("input[name='end']").style.cssText = 'background-color:' + cols[0];
+
+  var parent = document.getElementById('fieldDefsRows');
+  if (target.currentTarget.id == "addRowButton") {
+    parent.appendChild(newRow);
+  } else {
+    parent.insertBefore(newRow, target.currentTarget.closest(".fieldDefsRow"));
   }
-  var reader = new FileReader();
-  reader.onload = function(input) {
-    setFieldsFromCSV(parseCSV(input.target.result, ';'));
-    e.target.value = '';
-  };
-  reader.readAsText(file);
+
+  // increment the field name
+  newRow.querySelector("input[name='fieldname']").value = "field" + parent.childElementCount;
+
+  // enable the delete row button
+  var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
+  Array.from(allDeletebuttons).forEach(function(element) {
+    element.removeAttribute('disabled');
+  });
+
+  prepareExtract();
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Delete Row
 var deleteRow = (el) => {
   var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
   if (allDeletebuttons.length == 2) {
@@ -451,6 +416,52 @@ var deleteRow = (el) => {
   prepareExtract();
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Save Field Def
+var saveFieldDef = () => {
+  var fieldDef = getFieldDef();
+  var fieldDefCSV = '';
+
+  for (const prop in fieldDef) {
+    if (Object.hasOwn(fieldDef, prop)) {
+      fieldDefCSV += prop + ";"
+    }
+  }
+  fieldDefCSV += "\n";
+
+  for (let i = 0; i < fieldDef['fieldNames'].length; i++) {
+    for (const prop in fieldDef) {
+      if (Object.hasOwn(fieldDef, prop)) {
+        fieldDefCSV += fieldDef[prop][i] + ";"
+      }
+    }
+    fieldDefCSV += "\n";
+  }
+  
+  var csvblob = new Blob([fieldDefCSV], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.download = 'fieldDefinition.csv';
+  a.href = window.URL.createObjectURL(csvblob);
+  a.click();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Load Field Def
+var loadFieldDef = (e) => {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(input) {
+    setFieldsFromCSV(parseCSV(input.target.result, ';'));
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Load Predefned Set
 var loadPredefinedFieldSet = () => {
   var selected = document.getElementById('predefinedFieldSetsSelect').value;
   if (predefinedFieldSets[selected])  {
@@ -458,14 +469,33 @@ var loadPredefinedFieldSet = () => {
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Save CSV Result
+var saveCSVResults = () => {
+  var source = document.getElementById("resultingCSVinput").value;
+  
+  var csvblob = new Blob([source], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.download = 'resultingCSV.csv';
+  a.href = window.URL.createObjectURL(csvblob);
+  a.click();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Add listeners
+//////////////////////////////////////////////////////////////////////////////
+
 // add onchange listener to all fields
 var changingfields = document.getElementsByClassName("changingfield");
 Array.from(changingfields).forEach(function(element) {
   element.addEventListener('input', prepareExtract);
 });
 
-// add click listener to add buttons
-document.getElementById('addRowButton').addEventListener("click", addRow);
+// add click listener to add before buttons
+var addBeforeButtons = document.getElementsByClassName('addBeforeRowButton');
+Array.from(addBeforeButtons).forEach(function(element) {
+  element.addEventListener('click', addRow);
+});
 
 // add click listener to delete buttons
 var deleteButtons = document.getElementsByClassName('deleteRowButton');
@@ -473,10 +503,17 @@ Array.from(deleteButtons).forEach(function(element) {
   element.addEventListener('click', deleteRow);
 });
 
+// add click listener to add buttons
+document.getElementById('addRowButton').addEventListener("click", addRow);
+
+// save and load field set
 document.getElementById('saveFieldDefButton').addEventListener("click", saveFieldDef);
 document.getElementById('loadFieldDefInput').addEventListener("change", loadFieldDef);
 
+// load predefined fields set button
 document.getElementById('loadPredefFieldDefButton').addEventListener("click", loadPredefinedFieldSet);
+
+// save results button
 document.getElementById('saveResCSVButton').addEventListener("click", saveCSVResults);
 
 // assign background color to expression inputs
@@ -484,6 +521,7 @@ var cols = getSisterColors();
 document.getElementsByName("start")[0].style.cssText = 'background-color:' + cols[1];
 document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[0];
 
+// assign default test value to source
 document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p></row><row><p1>data3</p><p2>data4</p></row>";
 
 prepareExtract();

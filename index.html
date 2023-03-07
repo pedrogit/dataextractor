@@ -16,6 +16,7 @@
           <p class="fieldNameCol boldHeader">Field Name</p>
           <p class="expressionCol boldHeader">Opening RegEx Delimiter</p>
           <p class="expressionCol boldHeader">Closing RegEx Delimiter</p>
+          <p class="addBeforeButtonCol boldHeader">&nbsp;</p>
           <p class="deleteButtonCol boldHeader">&nbsp;</p>
         </div>
         <div id=fieldDefsRows>
@@ -29,20 +30,23 @@
             <div class=expressionCol>
               <input class=changingfield name=end>
             </div>
+            <div class=addBeforeButtonCol>
+              <button class=addBeforeRowButton>Add&nbsp;Field&nbsp;Before</button>
+            </div>
             <div class=deleteButtonCol>
               <button class=deleteRowButton disabled>Delete</button>
             </div>
           </div>
         </div>
         <div id="fieldDefToolBar">
-          <button id=addRowButton>Add field</button>
+          <button id=addRowButton>Add Field</button>
           <button id=saveFieldDefButton>Export Field Def</button>
           <button id=loadFieldDefButton onclick="document.getElementById('loadFieldDefInput').click()">Import Field Def</button>
           <input type="file" style="display:none;" id=loadFieldDefInput>
         </div>
       </div>
       <div id="predefinedFieldSets">
-        <p class=boldHeader>Predefined Field Sets</p>
+        <p class=boldHeader>Predefined Fields Set</p>
         <select id=predefinedFieldSetsSelect>
           <option>None</option>
           <option value="CVCanadienArtilePeerReviewed">CVCanadien - Articles Peer Reviewed</option>

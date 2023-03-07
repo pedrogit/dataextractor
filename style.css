@@ -41,8 +41,8 @@ button {
   flex-basis: 14%;
 }
 
-.deleteButtonCol {
-  flex-basis: 6%;
+.deleteButtonCol, .addBeforeButtonCol {
+  flex-basis: 3%;
 }
 
 p,
