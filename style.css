@@ -1,6 +1,7 @@
 body {
   margin: 0px;
   padding: 0px;
+  background-color: green;
 }
 
 button {
@@ -23,6 +24,7 @@ button {
 
 .boldHeader {
   font-weight: bold;
+  color: white;
 }
 
 #dataDefinition,
@@ -76,5 +78,7 @@ textarea {
   border: 1px solid;
   padding: 3px;
   font-family: monospace;
+  background-color: white;
+
 }
 
