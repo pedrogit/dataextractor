@@ -1,5 +1,5 @@
 var predefinedFieldSets = {
-  "CVCanadienArtilePeerReviewed": `fieldNames;starts;startColors;ends;endsColors;
+  "CVCanadienPeerReviewedArticles": `fieldNames;starts;startColors;ends;endsColors;
 title;label="Articles de revue" recordId="[a-z0-9]*?">s*<field id="[a-z0-9]*?" label="Titre de l'article">s*<value type="String">;rgb(189, 200, 124);</value>;rgb(244, 246, 233);
 journal;label="Revue">s*<value type="String">;rgb(63, 245, 171);</value>;rgb(220, 253, 240);
 volume;label="Volume">s*<value type="String">;rgb(219, 88, 142);</value>;rgb(246, 212, 226);
@@ -12,7 +12,7 @@ author;label="Auteurs">s*<value type="String">;rgb(81, 205, 111);</value>;rgb(22
 editor;label="Éditeurs">s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
 doi;label="DOI">s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
 
-  "CVCanadienFounding": `fieldNames;starts;startColors;ends;endsColors;
+  "CVCanadienFinancement": `fieldNames;starts;startColors;ends;endsColors;
 type_financement;label="Historique du financement de la recherche" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Type de financement"><lov id="[a-z0-9]*">;rgb(235, 211, 144);</lov></field>;rgb(244, 230, 192);
 debut_annee_mois;label="Début de financement"><value format="yyyy/MM" type="YearMonth">;rgb(209, 156, 181);</value>;rgb(246, 236, 241);
 fin_annee_mois;label="Fin de financement"><value format="yyyy/MM" type="YearMonth">;rgb(209, 222, 129);</value>;rgb(240, 244, 213);
@@ -548,6 +548,6 @@ document.getElementsByName("start")[0].style.cssText = 'background-color:' + col
 document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[0];
 
 // assign default test value to source
-document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p></row><row><p1>data3</p><p2>data4</p></row>";
+//document.getElementById("sourceinput").value = "<row><p1>data1</p><p2>data2</p></row><row><p1>data3</p><p2>data4</p></row>";
 
 prepareExtract();
