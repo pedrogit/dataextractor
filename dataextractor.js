@@ -57,7 +57,21 @@ poste_actuel;<field id="[a-z0-9]*" label="Poste actuel"><value type="String">;rg
 nom_diplome;<field id="[a-z0-9]*" label="Nom de diplôme"><value type="Bilingual"></value><bilingual/>;rgb(124, 154, 236);</field>;rgb(194, 208, 246);
 specialisation_fr;<field id="[a-z0-9]*" label="Spécialisation"><value type="Bilingual"></value><bilingual/?>(<french>)?;rgb(211, 157, 179);(</french>)?(</field>)?;rgb(240, 221, 229);
 specialisation_en;(<english>)?;rgb(144, 233, 231);(</english>)?(</bilingual></field>)?;rgb(219, 248, 247);
-organisme;<field id="[a-z0-9]*" label="Organisme actuel"><value type="String">;rgb(215, 236, 134);</value></field></section>;rgb(243, 249, 219);`
+organisme;<field id="[a-z0-9]*" label="Organisme actuel"><value type="String">;rgb(215, 236, 134);</value></field>;rgb(243, 249, 219);`,
+
+"CVCanadienPresentations": `fieldNames;starts;startColors;ends;endsColors;
+titre;<section id="[a-z0-9]*" label="Présentations" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Titre de la présentation"><value type="String">;rgb(157, 129, 208);</value></field>;rgb(217, 206, 237);
+nom_evenement;<field id="[a-z0-9]*" label="Nom de conférence ou d'événement"><value type="String">;rgb(115, 242, 149);</value></field>;rgb(212, 251, 223);
+lieu;<field id="[a-z0-9]*" label="Lieu"/?>(<lov id="[a-z0-9]*">)?;rgb(91, 123, 242);(</lov>)?</?fi;rgb(200, 211, 251);
+ville;eld id="[a-z0-9]*" label="Ville"><value type="String">;rgb(241, 225, 141);</value></field>;rgb(248, 240, 199);
+type_public;<field id="[a-z0-9]*" label="Public principal"/?>(<lov id="[a-z0-9]*">)?;rgb(146, 204, 166);(</lov>)?</?fi;rgb(218, 238, 225);
+invite;eld id="[a-z0-9]*" label="Étiez-vous conférencier invité\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(212, 129, 167);(</lov>)?</?fi;rgb(240, 211, 224);
+principal;eld id="[a-z0-9]*" label="Étiez-vous conférencier principal\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(164, 218, 114);(</lov>)?</?fi;rgb(224, 242, 207);
+concours;eld id="[a-z0-9]*" label="S'agissait-il d'une présentation dans le cadre d'un concours\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(162, 206, 200);(</lov>)?</?field;rgb(221, 237, 235);
+annee; id="[a-z0-9]*" label="Année de présentation"><value format="yyyy" type="Year">;rgb(139, 232, 107);</value></field>;rgb(221, 248, 211);
+url;<field id="[a-z0-9]*" label="URL"><value type="String">;rgb(198, 205, 169);</value></field>;rgb(231, 234, 219);
+copresentateurs;<field id="[a-z0-9]*" label="Co-présentateurs"><value type="String">;rgb(196, 228, 143);</value></field>;rgb(227, 242, 201);`
+
 }
 
 
