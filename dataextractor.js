@@ -10,7 +10,33 @@ publisher;label="Éditeur">s*<value type="String">;rgb(82, 188, 247);</value>;rg
 url;label="URL">s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
 author;label="Auteurs">s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
 editor;label="Éditeurs">s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
-doi;label="DOI">s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`
+doi;label="DOI">s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
+
+  "CVCanadienFounding": `fieldNames;starts;startColors;ends;endsColors;
+type_financement;label="Historique du financement de la recherche" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Type de financement"><lov id="[a-z0-9]*">;rgb(235, 211, 144);</lov></field>;rgb(244, 230, 192);
+debut_annee_mois;label="Début de financement"><value format="yyyy/MM" type="YearMonth">;rgb(209, 156, 181);</value>;rgb(246, 236, 241);
+fin_annee_mois;label="Fin de financement"><value format="yyyy/MM" type="YearMonth">;rgb(209, 222, 129);</value>;rgb(240, 244, 213);
+titre;label="Titre du financement"><value type="String">;rgb(134, 239, 226);</value>;rgb(212, 249, 245);
+type_subvention;label="Type de subvention"/?>(<lov id="[a-z0-9]*">)?;rgb(153, 229, 140);(</lov>)?</?field;rgb(220, 246, 215);
+description_fr;<french>;rgb(154, 221, 174);</french>;rgb(204, 238, 214);
+description_en;<english>;rgb(135, 138, 210);</english>;rgb(224, 224, 243);
+prog_rech_clinique;clinique\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(240, 226, 98);(</lov>)?</?field;rgb(252, 249, 225);
+statut_financement;label="Statut du financement"/?>(<lov id="[a-z0-9]*">)?;rgb(246, 194, 88);(</lov>)?</?field;rgb(252, 238, 208);
+role;label="Rôle"/?>(<lov id="[a-z0-9]*">)?;rgb(240, 234, 113);(</lov>)?</?field;rgb(249, 247, 201);
+application_fr;label="Mise en application de la recherche"><value type="Bilingual"></value><bilingual><french>;rgb(158, 110, 231);</french>;rgb(232, 220, 249);
+application_en;<english>;rgb(181, 202, 165);</english>;rgb(216, 227, 208);
+organisme;label="Organisme de financement"/?>(<lov id="[a-z0-9]*">)?;rgb(229, 179, 107);(</lov>)?</?field;rgb(245, 226, 199);
+autre_organisme;label="Autre organisme de financement"><value type="String">;rgb(129, 195, 205);</value></field>;rgb(214, 235, 239);
+programme;label="Nom du programme"><value type="String">;rgb(154, 168, 196);</value></field>;rgb(216, 222, 232);
+numero_ref_financement;label="Numéro de référence du financement"><value type="String">;rgb(242, 227, 132);</value></field>;rgb(248, 240, 188);
+montant_total;label="Montant total"><value type="Number">;rgb(230, 141, 220);</value></field>;rgb(249, 228, 247);
+devise_montant_total;label="Devise du montant total"/?>(<lov id="[a-z0-9]*">)?;rgb(114, 238, 219);(</lov>)?</?field;rgb(212, 250, 244);
+montant_recu;label="Portion de financement reçu"><value type="Number">;rgb(128, 172, 237);</value></field>;rgb(204, 222, 248);
+devise_montant_recu;label="Devise de la portion de financement reçu"/?>(<lov id="[a-z0-9]*">)?;rgb(250, 119, 247);(</lov>)?</?field;rgb(254, 217, 253);
+renouvelable;renouvelable\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(231, 138, 153);(</lov>)?</?field;rgb(245, 206, 212);
+competitif;compétitif\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(166, 122, 236);(</lov>)?</?field;rgb(215, 195, 246);
+debut_financement_annee_mois;label="Date de début du financement"><value format="yyyy/MM" type="YearMonth">;rgb(121, 247, 193);</value></field>;rgb(222, 253, 240);
+fin_financement_annee_mois;label="Date de fin du financement"><value format="yyyy/MM" type="YearMonth">;rgb(220, 186, 140);</value></field>;rgb(242, 230, 214);`
 }
 
 
