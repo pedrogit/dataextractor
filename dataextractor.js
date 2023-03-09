@@ -113,7 +113,12 @@ emission;<field id="[a-z0-9]*" label="Émission"><value type="String">;rgb(221, 
 media;<field id="[a-z0-9]*" label="(Chaîne|Tribune)"><value type="String">;rgb(202, 165, 207);</value></field>;rgb(232, 216, 234);
 date_premiere_diffusion;<field id="[a-z0-9]*" label="Date de (la première diffusion|publication)"><value format="yyyy-MM-dd" type="Date">;rgb(148, 207, 128);</value></field>;rgb(233, 245, 229);
 date_derniere_diffusion;<field id="[a-z0-9]*" label="Date de la dernière diffusion"><value format="yyyy-MM-dd" type="Date">;rgb(139, 167, 235);</value></field>;rgb(219, 228, 249);
-url;<field id="[a-z0-9]*" label="URL"><value type="String">;rgb(211, 135, 156);</value></field>;rgb(245, 228, 233);`
+url;<field id="[a-z0-9]*" label="URL"><value type="String">;rgb(211, 135, 156);</value></field>;rgb(245, 228, 233);`,
+
+"ArticlesFromGoogleScholar": `fieldNames;starts;startColors;ends;endsColors;
+title;<td class="gsc_a_t"><a href=".*?" class="gsc_a_at">;rgb(108, 243, 243);</a>;rgb(231, 253, 253);
+authors;<div class="gs_gray">;rgb(227, 230, 153);</div>;rgb(246, 247, 221);
+year;<td class="gsc_a_y"><span class="gsc_a_h gsc_a_hc gs_ibl">;rgb(204, 197, 166);</span>;rgb(237, 234, 223);`,
 }
 
 
@@ -170,48 +175,6 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
   return result;
 }
 
-/*
-  features
-
-    - save/load field definition to/from CSV file
-    - add list predefined field definition (CV Canadien publications)
-
-
-  possible options
-  
-    for resulting CSV
-
-    - row separator (, or ; or \t)
-    - quote strings (always, when necessary)
-    - wordwrap
-
-    for each field:
-
-    - match value: match the value instead of it's delimiters. In that case it must be a regex.
-    - trim extra spaces (space, \r, \n, \t)
-    - change case (uppercase, lowercase, sentence)
-    - randomize color
-    - move up and down buttons
-    - make first delimiter necessary to create a record (or not)
-    - make first value necessary to create a record (or not)
-
-    for each search expression:
-
-    - regex: search the expression as a regex or not
-    - ignore case
-
-    for each preceding search expression:
-
-    - same as preceding following
-
-    for source
-
-    - highlight data (instead of delimiters)
-    - wordwrap
-    - search in source with find next and find previous buttons
-    - highlight matching locations in the scrolling bar
-
-*/
 var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
   var data = [];
   var delimiterFound = false;
