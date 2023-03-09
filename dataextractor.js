@@ -1,16 +1,50 @@
 var predefinedFieldSets = {
   "CVCanadienPeerReviewedArticles": `fieldNames;starts;startColors;ends;endsColors;
-title;label="Articles de revue" recordId="[a-z0-9]*?">s*<field id="[a-z0-9]*?" label="Titre de l'article">s*<value type="String">;rgb(189, 200, 124);</value>;rgb(244, 246, 233);
-journal;label="Revue">s*<value type="String">;rgb(63, 245, 171);</value>;rgb(220, 253, 240);
-volume;label="Volume">s*<value type="String">;rgb(219, 88, 142);</value>;rgb(246, 212, 226);
-numero;label="Numéro">s*<value type="String">;rgb(98, 134, 214);</value>;rgb(208, 219, 243);
-pages;label="Plage de page">s*<value type="String">;rgb(84, 237, 242);</value>;rgb(226, 252, 253);
-year;label="Année">s*<value format="yyyy" type="Year">;rgb(193, 120, 179);</value>;rgb(234, 209, 229);
-publisher;label="Éditeur">s*<value type="String">;rgb(82, 188, 247);</value>;rgb(197, 233, 252);
-url;label="URL">s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
-author;label="Auteurs">s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
-editor;label="Éditeurs">s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
-doi;label="DOI">s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
+title;label="Articles de revue" recordId="[a-z0-9]*?">\\s*<field id="[a-z0-9]*?" label="Titre de l'article">\\s*<value type="String">;rgb(189, 200, 124);</value>;rgb(244, 246, 233);
+journal;label="Revue">\\s*<value type="String">;rgb(63, 245, 171);</value>;rgb(220, 253, 240);
+volume;label="Volume">\\s*<value type="String">;rgb(219, 88, 142);</value>;rgb(246, 212, 226);
+numero;label="Numéro">\\s*<value type="String">;rgb(98, 134, 214);</value>;rgb(208, 219, 243);
+pages;label="Plage de page">\\s*<value type="String">;rgb(84, 237, 242);</value>;rgb(226, 252, 253);
+status;label="Statut de publication">\\s*<lov id="[a-z0-9]*">;rgb(145, 212, 234);</lov></field>;rgb(195, 231, 244);
+year;label="Année">\\s*<value format="yyyy" type="Year">;rgb(193, 120, 179);</value>;rgb(234, 209, 229);
+publisher;label="Éditeur">\\s*<value type="String">;rgb(82, 188, 247);</value>;rgb(197, 233, 252);
+url;label="URL">\\s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
+author;label="Auteurs">\\s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
+editor;label="Éditeurs">\\s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
+doi;label="DOI">\\s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
+
+"CVCanadienArticlesDeMagazine": `fieldNames;starts;startColors;ends;endsColors;
+title;label="Articles de magazine" recordId="[a-z0-9]*?">\\s*<field id="[a-z0-9]*?" label="Titre de l'article">\\s*<value type="String">;rgb(189, 200, 124);</value>;rgb(244, 246, 233);
+magazine;label="Nom du magazine">\\s*<value type="String">;rgb(63, 245, 171);</value>;rgb(220, 253, 240);
+volume;label="Volume">\\s*<value type="String">;rgb(219, 88, 142);</value>;rgb(246, 212, 226);
+numero;label="Numéro">\\s*<value type="String">;rgb(98, 134, 214);</value>;rgb(208, 219, 243);
+pages;label="Plage de page">\\s*<value type="String">;rgb(84, 237, 242);</value>;rgb(226, 252, 253);
+status;label="Statut de publication">\\s*<lov id="[a-z0-9]*">;rgb(145, 212, 234);</lov></field>;rgb(195, 231, 244);
+year;label="Année">\\s*<value format="yyyy" type="Year">;rgb(193, 120, 179);</value>;rgb(234, 209, 229);
+publisher;label="Éditeur">\\s*<value type="String">;rgb(82, 188, 247);</value>;rgb(197, 233, 252);
+url;label="URL">\\s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
+author;label="Auteurs">\\s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
+editor;label="Éditeurs">\\s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
+doi;label="DOI">\\s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
+
+"CVCanadienArticlesDeConference": `fieldNames;starts;startColors;ends;endsColors;
+type;label="Articles de conférence" recordId="[a-z0-9]*?">\\s*<field id="[a-z0-9]*?" label="Type de publication de conférence">\\s*<lov id="[a-z0-9]*">;rgb(229, 104, 183);</lov></field>;rgb(251, 230, 243);
+title;label="Titre de l'article">\\s*<value type="String">;rgb(189, 200, 124);</value></field>;rgb(244, 246, 233);
+conference_name;label="Nom de la conférence">\\s*<value type="String">;rgb(63, 245, 171);</value></field>;rgb(220, 253, 240);
+location;label="Lieu de la conférence">\s*\s*<lov id="[a-z0-9]*">;rgb(219, 88, 142);</lov></field>;rgb(246, 212, 226);
+town;label="Ville">\\s*<value type="String">;rgb(98, 134, 214);</value></field>;rgb(208, 219, 243);
+conference_date;label="Date de la conférence">\\s*<value format="yyyy/MM" type="YearMonth">;rgb(154, 202, 185);</value></field>;rgb(229, 241, 237);
+title_proceeding;label="Publié dans">\\s*<value type="String">;rgb(153, 217, 139);</value></field>;rgb(206, 237, 199);
+pages;label="Plage de page">\\s*<value type="String">;rgb(84, 237, 242);</value>;rgb(226, 252, 253);
+status;label="Statut de publication">\\s*<lov id="[a-z0-9]*">;rgb(145, 212, 234);</lov></field>;rgb(195, 231, 244);
+year;label="Année">\\s*<value format="yyyy" type="Year">;rgb(193, 120, 179);</value>;rgb(234, 209, 229);
+publisher;label="Éditeur">\\s*<value type="String">;rgb(82, 188, 247);</value>;rgb(197, 233, 252);
+url;label="URL">\\s*<value type="String">;rgb(109, 189, 116);</value>;rgb(224, 241, 225);
+peer_reviewed;label="Revu par un comité de lecture\\?"><lov id="[a-z0-9]*">;rgb(159, 135, 209);</lov></field>;rgb(230, 223, 243);
+invited_speaker;label="Étiez-vous un conférencier invité\\?"><lov id="[a-z0-9]*">;rgb(226, 133, 243);</lov></field>;rgb(242, 201, 250);
+author;label="Auteurs">\\s*<value type="String">;rgb(81, 205, 111);</value>;rgb(229, 247, 233);
+editor;label="Éditeurs">\\s*<value type="String">;rgb(92, 220, 110);</value>;rgb(211, 246, 216);
+doi;label="DOI">\\s*<value type="String">;rgb(91, 112, 227);</value>;rgb(192, 200, 244);`,
 
   "CVCanadienFinancement": `fieldNames;starts;startColors;ends;endsColors;
 type_financement;label="Historique du financement de la recherche" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Type de financement"><lov id="[a-z0-9]*">;rgb(235, 211, 144);</lov></field>;rgb(244, 230, 192);
@@ -70,8 +104,16 @@ principal;eld id="[a-z0-9]*" label="Étiez-vous conférencier principal\\?"/?>(<
 concours;eld id="[a-z0-9]*" label="S'agissait-il d'une présentation dans le cadre d'un concours\\?"/?>(<lov id="[a-z0-9]*">)?;rgb(162, 206, 200);(</lov>)?</?field;rgb(221, 237, 235);
 annee; id="[a-z0-9]*" label="Année de présentation"><value format="yyyy" type="Year">;rgb(139, 232, 107);</value></field>;rgb(221, 248, 211);
 url;<field id="[a-z0-9]*" label="URL"><value type="String">;rgb(198, 205, 169);</value></field>;rgb(231, 234, 219);
-copresentateurs;<field id="[a-z0-9]*" label="Co-présentateurs"><value type="String">;rgb(196, 228, 143);</value></field>;rgb(227, 242, 201);`
+copresentateurs;<field id="[a-z0-9]*" label="Co-présentateurs"><value type="String">;rgb(196, 228, 143);</value></field>;rgb(227, 242, 201);`,
 
+"CVCanadienInterventionsMedias": `fieldNames;starts;startColors;ends;endsColors;
+sujet;<section id="[a-z0-9]*" label="Entrevues (diffusées|publiées)" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Sujet"><value type="String">;rgb(204, 208, 169);</value></field>;rgb(235, 236, 220);
+intervieweur;<field id="[a-z0-9]*" label="Intervieweur"><value type="String">;rgb(204, 189, 166);</value></field>;rgb(234, 229, 219);
+emission;<field id="[a-z0-9]*" label="Émission"><value type="String">;rgb(221, 138, 146);</value></field>;rgb(238, 197, 201);
+media;<field id="[a-z0-9]*" label="(Chaîne|Tribune)"><value type="String">;rgb(202, 165, 207);</value></field>;rgb(232, 216, 234);
+date_premiere_diffusion;<field id="[a-z0-9]*" label="Date de (la première diffusion|publication)"><value format="yyyy-MM-dd" type="Date">;rgb(148, 207, 128);</value></field>;rgb(233, 245, 229);
+date_derniere_diffusion;<field id="[a-z0-9]*" label="Date de la dernière diffusion"><value format="yyyy-MM-dd" type="Date">;rgb(139, 167, 235);</value></field>;rgb(219, 228, 249);
+url;<field id="[a-z0-9]*" label="URL"><value type="String">;rgb(211, 135, 156);</value></field>;rgb(245, 228, 233);`
 }
 
 
