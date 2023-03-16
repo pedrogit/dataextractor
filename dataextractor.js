@@ -175,22 +175,23 @@ String.prototype.findFirstAt = function(search, pos = 0, regex = false) {
   return result;
 }
 
-var extractValues = (source, fields, starts, startsColors, ends, endsColors) => {
+var extractValues = (source, fieldArr, startArr, startColArr, endArr, endColArr) => {
   var data = [];
-  var delimiterFound = false;
+  var delimiterFound;
   var currentPos = 0;
   var selectedSource = source.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
-  var selPos = 0;
+  var selectedPos = 0;
 
+  // do this while a starting delimiter is found
   do {
     delimiterFound = false;
-    valueFound = false;
-    firstDelimiterFound = false;
+    var valueFound = false;
+    var firstDelimiterFound = false;
     var row = [];
-    for (let i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fieldArr.length; i++) {
 
       // find the starting delimiter
-      var startObj = source.findFirstAt(starts[i], currentPos, true);
+      var startObj = source.findFirstAt(startArr[i], currentPos, true);
       if (startObj.str) {
         currentPos = startObj.lastIndex;
         delimiterFound = true;
@@ -199,28 +200,33 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
         }
         
         // highlight the find
+
+        // HTML encode the start string 
         var startStr = startObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
-        var repl = '<span style="background-color: ' + startsColors[i] + '">' + startStr + '</span>';
-        selectedSource = selectedSource.replaceAt(startStr, repl, selPos);
-        selPos = selectedSource.indexOf(repl, selPos) + repl.length;
+        var repl = '<span style="background-color: ' + startColArr[i] + '">' + startStr + '</span>';
+        selectedSource = selectedSource.replaceAt(startStr, repl, selectedPos);
+        selectedPos = selectedSource.indexOf(repl, selectedPos) + repl.length;
 
         // find the ending delimiter
-        var endObj = source.findFirstAt(ends[i], currentPos, true);
+        var endObj = source.findFirstAt(endArr[i], currentPos, true);
         if (endObj.str) {
           currentPos = endObj.lastIndex;
 
           // highlight the find
           var endStr = endObj.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
-          var repl = '<span style="background-color: ' + endsColors[i] + '">' + endStr + '</span>';
-          selectedSource = selectedSource.replaceAt(endStr, repl, selPos);
-          selPos = selectedSource.indexOf(repl, selPos) + repl.length;
+          var repl = '<span style="background-color: ' + endColArr[i] + '">' + endStr + '</span>';
+          selectedSource = selectedSource.replaceAt(endStr, repl, selectedPos);
+          selectedPos = selectedSource.indexOf(repl, selectedPos) + repl.length;
         }
       }
 
+      // init the data value and extract it if it was found
       var dataStr = '';
       if (startObj.str && endObj.str) {
         var dataStr = source.substring(startObj.lastIndex, endObj.index < startObj.lastIndex ? startObj.lastIndex : endObj.index)
         //dataStr = dataStr.replaceAll(new RegExp('[\\s\\n\\r\\t]+', 'g'), ' ');
+
+        // if a separator or a newline char is found in the value, escape double quotes and double quote the value
         if (dataStr.indexOf(';') > -1 || dataStr.indexOf('\n') > -1) {
           dataStr = '"' + dataStr.replaceAll('"', '""') + '"';
         }
@@ -235,7 +241,7 @@ var extractValues = (source, fields, starts, startsColors, ends, endsColors) => 
 
   document.getElementById("sourceinputselectable").innerHTML = selectedSource;
 
-  var resultCSV = fields.join(";") + ";\n";
+  var resultCSV = fieldArr.join(";") + ";\n";
   Array.from(data).forEach(function(datarow) {
     resultCSV = resultCSV + datarow.join(";") + ";\n";
   });
