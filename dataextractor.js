@@ -303,10 +303,10 @@ var extractValues = (source = '', fieldDefsArr = []) => {
             }
             else if (currentFind.fieldName == lastFieldName) {
               if (lastRow[currentFind.fieldName] == '') {
-                lastRow[currentFind.fieldName] =  value;
+                lastRow[currentFind.fieldName] = value;
               }
               else if (value != '') {
-                lastRow[currentFind.fieldName] =  lastRow[currentFind.fieldName] + ', ' + value;
+                lastRow[currentFind.fieldName] = lastRow[currentFind.fieldName] + ', ' + value;
               }
             }
             else {
@@ -438,7 +438,7 @@ if (vals3.resultCSV != 'f1;f2;f3;\na;b, b;c;\ne;;;\n') {
 
 // 11) with 3 columns, the 2nd one repeating 2 times and preceded by the 3th column
 source = '<1>a</1><3>c</3><2>b</2><2>b</2><3>c</3><1>e</1>';
-vals3 = extractValues(source, newf1); 
+vals3 = extractValues(source, newf1);
 if (vals3.resultCSV != 'f1;f2;f3;\na;b, b;c;\ne;;;\n') {
   throw new Error("Test 11 failed!");
 }
@@ -504,18 +504,20 @@ var addColors = (source, fieldDefs) => {
   return source;
 }
 
+var extractTread;
 var prepareExtract = () => {
   document.getElementById("resultingCSVinput").value = '';
 
   var source = document.getElementById("sourceinput").value;
   var fieldDef = getFieldDef();
 
-  // extract
-  //console.log("aaaa");
-  var result = extractValues(source, fieldDef);
-  //console.log("bbbb");
-  document.getElementById("resultingCSVinput").value = result.resultCSV;
-  document.getElementById("sourceinputselectable").innerHTML = result.highLightedSource;
+  // extract asynchronously
+  clearTimeout(extractTread);
+  extractTread = setTimeout(() => {
+    var result = extractValues(source, fieldDef);
+    document.getElementById("resultingCSVinput").value = result.resultCSV;
+    document.getElementById("sourceinputselectable").innerHTML = result.highLightedSource;
+  }, 500);
 };
 
 // borrowed from https://stackoverflow.com/questions/1293147/how-to-parse-csv-data
@@ -702,7 +704,7 @@ var addRow = (target, extract = true) => {
 
   if (extract) {
     console.log('addRow');
-    prepareExtract();    
+    prepareExtract();
   }
 }
 
