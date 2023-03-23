@@ -505,11 +505,15 @@ var addColors = (source, fieldDefs) => {
 }
 
 var prepareExtract = () => {
-  var fieldDef = getFieldDef();
+  document.getElementById("resultingCSVinput").value = '';
+
   var source = document.getElementById("sourceinput").value;
+  var fieldDef = getFieldDef();
 
   // extract
+  //console.log("aaaa");
   var result = extractValues(source, fieldDef);
+  //console.log("bbbb");
   document.getElementById("resultingCSVinput").value = result.resultCSV;
   document.getElementById("sourceinputselectable").innerHTML = result.highLightedSource;
 };
@@ -625,11 +629,12 @@ var setFieldsFromCSV = (csv) => {
   while (allDeleteButtons.length != csv.length - 1) {
     if (allDeleteButtons.length < csv.length - 1) {
       // add a row
-      addRow();
+      addRow(null, false);
     }
     else {
       // delete a row
-      allDeleteButtons[0].click();
+      //allDeleteButtons[0].click();
+      deleteRow(allDeleteButtons[0], false);
     }
     allDeleteButtons = document.getElementsByClassName('deleteRowButton');
   }
@@ -652,7 +657,7 @@ var setFieldsFromCSV = (csv) => {
 //////////////////////////////////////////////////////////////////////////////
 // Add Row
 // add a field row before the target if it is provided, otherwise at the end
-var addRow = (target) => {
+var addRow = (target, extract = true) => {
   var newRow = document.getElementsByClassName("fieldDefsRow")[0].cloneNode(true);
 
   // reset the inputs and add the onchange event listener
@@ -695,12 +700,15 @@ var addRow = (target) => {
     element.removeAttribute('disabled');
   });
 
-  prepareExtract();
+  if (extract) {
+    console.log('addRow');
+    prepareExtract();    
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Delete Row
-var deleteRow = (el) => {
+var deleteRow = (el, extract = true) => {
   var allDeletebuttons = document.getElementsByClassName('deleteRowButton');
   if (allDeletebuttons.length == 2) {
     Array.from(allDeletebuttons).forEach(function (element) {
@@ -708,9 +716,15 @@ var deleteRow = (el) => {
     });
   }
   if (allDeletebuttons.length > 1) {
-    el.currentTarget.closest(".fieldDefsRow").remove();
+    if (el.currentTarget) {
+      el = el.currentTarget;
+    }
+    el.closest(".fieldDefsRow").remove();
   }
-  prepareExtract();
+  if (extract) {
+    console.log('deleteRow');
+    prepareExtract();
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -794,7 +808,7 @@ Array.from(deleteButtons).forEach(function (element) {
   element.addEventListener('click', deleteRow);
 });
 
-// add click listener to add buttons
+// add click listener to the last add button
 document.getElementById('addRowButton').addEventListener("click", addRow);
 
 // save and load field set
@@ -825,4 +839,6 @@ document.getElementsByName("end")[0].style.cssText = 'background-color:' + cols[
 ";
 
 document.getElementById("sourceinput").value = "xaywbzxcy";*/
+//console.log('main');
+
 prepareExtract();
