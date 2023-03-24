@@ -338,6 +338,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
   };
 }
 
+/*
 // tests
 var source = '<f1>a</f1>';
 
@@ -464,6 +465,7 @@ vals3 = extractValues(source, newf1); // 'f1;f2;f3;\na;b;c;\ne;;;\n'
 if (vals3.resultCSV != 'f1;f2;f3;\na;;c;\ne;;;\n') {
   throw new Error("Test 14 failed!");
 }
+*/
 
 var getFieldDef = () => {
   var fieldDefsArr = [];
@@ -504,20 +506,22 @@ var addColors = (source, fieldDefs) => {
   return source;
 }
 
-var extractTread;
+var extractThread;
 var prepareExtract = () => {
-  document.getElementById("resultingCSVinput").value = '';
-
   var source = document.getElementById("sourceinput").value;
   var fieldDef = getFieldDef();
 
-  // extract asynchronously
-  clearTimeout(extractTread);
-  extractTread = setTimeout(() => {
-    var result = extractValues(source, fieldDef);
+  document.getElementById("resultingCSVinput").value = '';
+  document.getElementById("resultingCSVWait").style.display = 'flex';
+  // extract asynchronously to  allow interface changes to happen
+  clearTimeout(extractThread);
+  extractThread = setTimeout(() => {
+    var result = extractValues(source, fieldDef);//, (result) =>{
+    document.getElementById("resultingCSVWait").style.display = 'none';
     document.getElementById("resultingCSVinput").value = result.resultCSV;
     document.getElementById("sourceinputselectable").innerHTML = result.highLightedSource;
-  }, 500);
+
+  }, 5);
 };
 
 // borrowed from https://stackoverflow.com/questions/1293147/how-to-parse-csv-data

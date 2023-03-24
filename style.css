@@ -83,3 +83,13 @@ textarea {
 
 }
 
+#resultingCSVHeader {
+  display: flex;
+  align-items: center;
+}
+
+#resultingCSVWait {
+  display: f;
+  margin-left:5px;
+  width: 15px;
+}

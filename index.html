@@ -13,9 +13,9 @@
     <div id=dataDefinition>
       <div id=fieldDefs>
         <div id=fieldDefsHeader>
-          <p class="fieldNameCol boldHeader">Field Name</p>
-          <p class="expressionCol boldHeader">Opening RegEx Delimiter</p>
-          <p class="expressionCol boldHeader">Closing RegEx Delimiter</p>
+          <p class="fieldNameCol boldHeader">Field&nbsp;Name</p>
+          <p class="expressionCol boldHeader">Opening&nbsp;RegEx&nbsp;Delimiter</p>
+          <p class="expressionCol boldHeader">Closing&nbsp;RegEx&nbsp;Delimiter</p>
           <p class="addBeforeButtonCol boldHeader">&nbsp;</p>
           <p class="deleteButtonCol boldHeader">&nbsp;</p>
         </div>
@@ -39,9 +39,9 @@
           </div>
         </div>
         <div id="fieldDefToolBar">
-          <button id=addRowButton>Add Field</button>
-          <button id=saveFieldDefButton>Export Field Def</button>
-          <button id=loadFieldDefButton onclick="document.getElementById('loadFieldDefInput').click()">Import Field Def</button>
+          <button id=addRowButton>Add&nbsp;Field</button>
+          <button id=saveFieldDefButton>Export&nbsp;Field&nbsp;Def</button>
+          <button id=loadFieldDefButton onclick="document.getElementById('loadFieldDefInput').click()">Import&nbsp;Field&nbsp;Def</button>
           <input type="file" style="display:none;" id=loadFieldDefInput>
         </div>
       </div>
@@ -61,7 +61,10 @@
         <button id=loadPredefFieldDefButton>Load</button>
       </div>
       <div id=resultingCVS>
-        <p class=boldHeader>Resulting CSV</p>
+        <div id=resultingCSVHeader>
+          <p class=boldHeader>Resulting CSV</p>
+          <img id=resultingCSVWait src='processing.gif'>
+        </div>
         <textarea id=resultingCSVinput></textarea>
         <button id=saveResCSVButton>Save</button>
       </div>
@@ -75,4 +78,5 @@
   </div>
   <script src="dataextractor.js"></script>
 </body>
+
 </html>
