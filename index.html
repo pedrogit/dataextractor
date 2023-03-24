@@ -3,7 +3,7 @@
 
 <head>
   <title>CEF Data Extractor</title>
-  <link rel="stylesheet" href="style02.css">
+  <link rel="stylesheet" href="style03.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
@@ -41,7 +41,8 @@
         <div id="fieldDefToolBar">
           <button id=addRowButton>Add&nbsp;Field</button>
           <button id=saveFieldDefButton>Export&nbsp;Field&nbsp;Def</button>
-          <button id=loadFieldDefButton onclick="document.getElementById('loadFieldDefInput').click()">Import&nbsp;Field&nbsp;Def</button>
+          <button id=loadFieldDefButton
+            onclick="document.getElementById('loadFieldDefInput').click()">Import&nbsp;Field&nbsp;Def</button>
           <input type="file" style="display:none;" id=loadFieldDefInput>
         </div>
       </div>
@@ -63,17 +64,25 @@
       <div id=resultingCVS>
         <div id=resultingCSVHeader>
           <p class=boldHeader>Resulting CSV</p>
+          <button id=saveResCSVButton>Save</button>
           <img id=resultingCSVWait src='processing.gif'>
         </div>
         <textarea id=resultingCSVinput></textarea>
-        <button id=saveResCSVButton>Save</button>
       </div>
     </div>
     <div id=dataSource>
-      <p class=boldHeader>Source</p>
+      <div id=sourceHeader>
+        <p class=boldHeader>Source</p>
+        <button id=loadSourceButton
+          onclick="document.getElementById('loadSourceInput').click()">Import&nbsp;Source&nbsp;File</button>
+        <input type="file" style="display:none;" id=loadSourceInput>
+      </div>
       <textarea id=sourceinput class=changingfield></textarea>
-      <p class=boldHeader>Highlighted Source</p>
-      <div id=sourceinputselectable></div>
+      <div id=sourceHighlightedHeader>
+        <p class=boldHeader>Highlighted Source</p>
+        <img id=sourceHighlightedWait src='processing.gif'>
+      </div>
+      <div id=sourceHighlighted></div>
     </div>
   </div>
   <script src="dataextractor.js"></script>

@@ -235,7 +235,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
       do {
         var currentField = fieldDefsArr[searchIdx % fieldDefsArr.length];
         start = source.findFirstAt(currentField.start, currentPos, true);
-        if (start.str && start.index < bestFoundPos) {
+        if (start.str !== null && start.index < bestFoundPos) {
           someThingFound = true;
           bestFoundPos = start.index;
 
@@ -245,7 +245,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
           currentFind.start.col = currentField.startCol;
 
           var end = source.findFirstAt(currentField.end, start.lastIndex, true);
-          if (end.str) {
+          if (end.str !== null) {
             currentFind.end = end;
             currentFind.end.col = currentField.endCol;
           }
@@ -263,7 +263,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
 
     if (!isEmpty(currentFind)) {
       // highlight the find
-      if (!isEmpty(currentFind.start) && currentFind.start.str) {
+      if (!isEmpty(currentFind.start) && currentFind.start.str !== null) {
         // HTML encode the start string 
         var searchStr = currentFind.start.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
         var repl = '<span style="background-color: ' + currentFind.start.col + '">' + searchStr + '</span>';
@@ -469,6 +469,19 @@ vals3 = extractValues(source, newf1); // 'f1;f2;f3;\na;b;c;\ne;;;\n'
 if (vals3.resultCSV != 'f1;f2;f3;\na;;c;\ne;;;\n') {
   throw new Error("Test 14 failed!");
 }
+
+// try a simple CSV string
+source = 'f1;f2\na;b;';
+var fieldSet = [
+  {
+    fieldName: 'f1',
+    start: '^',
+    startCol: ['rgb(255, 0, 0)'],
+    end: ';',
+    endCol: ['rgb(0, 0, 255)']
+  }
+];
+vals3 = extractValues(source, fieldSet); // 'f1;f2;\na;b;\n'
 */
 
 var getFieldDef = () => {
@@ -517,15 +530,20 @@ var prepareExtract = () => {
 
   document.getElementById("resultingCSVinput").value = '';
   document.getElementById("resultingCSVWait").style.display = 'flex';
+  document.getElementById("sourceHighlightedWait").style.display = 'flex';
+  
   // extract asynchronously to  allow interface changes to happen
   clearTimeout(extractThread);
   extractThread = setTimeout(() => {
-    var result = extractValues(source, fieldDef);//, (result) =>{
+    var result = extractValues(source, fieldDef);
+    
     document.getElementById("resultingCSVWait").style.display = 'none';
-    document.getElementById("resultingCSVinput").value = result.resultCSV;
-    document.getElementById("sourceinputselectable").innerHTML = result.highLightedSource;
+    document.getElementById("sourceHighlightedWait").style.display = 'none';
 
-  }, 5);
+    document.getElementById("resultingCSVinput").value = result.resultCSV;
+    document.getElementById("sourceHighlighted").innerHTML = result.highLightedSource;
+
+  }, 50);
 };
 
 // borrowed from https://stackoverflow.com/questions/1293147/how-to-parse-csv-data
@@ -785,6 +803,22 @@ var loadPredefinedFieldSet = () => {
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// Load Source File
+var loadSourceInput = (e) => {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function (input) {
+    document.getElementById('sourceinput').value = input.target.result;
+    e.target.value = '';
+    prepareExtract();
+  };
+  reader.readAsText(file);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // Save CSV Result
 var saveCSVResults = () => {
   var source = document.getElementById("resultingCSVinput").value;
@@ -827,6 +861,9 @@ document.getElementById('loadFieldDefInput').addEventListener("change", loadFiel
 
 // load predefined fields set button
 document.getElementById('loadPredefFieldDefButton').addEventListener("click", loadPredefinedFieldSet);
+
+// load source button
+document.getElementById('loadSourceInput').addEventListener("change", loadSourceInput);
 
 // save results button
 document.getElementById('saveResCSVButton').addEventListener("click", saveCSVResults);

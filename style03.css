@@ -63,7 +63,7 @@ textarea {
 }
 
 #resultingCSVinput,
-#sourceinputselectable {
+#sourceHighlighted {
   min-height: 200px;
   resize: vertical;
 }
@@ -73,23 +73,22 @@ textarea {
   resize: vertical;
 }
 
-#sourceinputselectable {
+#sourceHighlighted {
   height: 100%;
   overflow-y: scroll;
   border: 1px solid;
   padding: 3px;
   font-family: monospace;
   background-color: white;
-
 }
 
-#resultingCSVHeader {
+#resultingCSVHeader, #sourceHeader, #sourceHighlightedHeader {
   display: flex;
   align-items: center;
 }
 
-#resultingCSVWait {
-  display: f;
+#resultingCSVWait, #sourceHighlightedWait {
+  display: none;
   margin-left:5px;
   width: 15px;
 }
