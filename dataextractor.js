@@ -94,6 +94,28 @@ specialisation_fr;<field id="[a-z0-9]*" label="Spécialisation"><value type="Bil
 specialisation_en;(<english>)?;rgb(144, 233, 231);(</english>)?(</bilingual></field>)?;rgb(219, 248, 247);
 organisme;<field id="[a-z0-9]*" label="Organisme actuel"><value type="String">;rgb(215, 236, 134);</value></field>;rgb(243, 249, 219);`,
 
+  "CVCanadienEncadrementEtudiantsNomPrenom": `fieldNames;starts;startColors;ends;endsColors;
+role;<section id="[a-z0-9]*" label="Supervision d'étudiants ou de stagiaires postdoctoraux" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Rôle"><lov id="[a-z0-9]*">;rgb(137, 218, 187);</lov></field>;rgb(223, 245, 236);
+date_debut_encadrement;<field id="[a-z0-9]*" label="Date de début de l'encadrement"><value format="yyyy/MM" type="YearMonth">;rgb(209, 165, 180);</value></field>;rgb(242, 230, 234);
+date_fin_encadrement;<field id="[a-z0-9]*" label="Date de fin de l'encadrement"><value format="yyyy/MM" type="YearMonth">;rgb(144, 144, 237);</value></field>;rgb(229, 229, 251);
+nom_etudiant;<field id="[a-z0-9]*" label="Etudiant"><value type="String">;rgb(172, 145, 193);(?= );rgb(219, 207, 228);
+prenom_etudiant; ;rgb(207, 172, 181);</value></field>;rgb(231, 214, 218);
+institution_etudiant;<field id="[a-z0-9]*" label="Institution de l'étudiant"><value type="String">;rgb(159, 199, 155);</value></field>;rgb(225, 238, 224);
+statut_citoyennete;<field id="[a-z0-9]*" label="Statut de citoyenneté canadienne de l'étudiant"/?>(<lov id="[a-z0-9]*">)?;rgb(227, 154, 168);(</lov>)?</?fi;rgb(243, 211, 216);
+type_diplome;eld id="[a-z0-9]*" label="Type de diplôme ou statut postdoctoral"/?>(<lov id="[a-z0-9]*">)?;rgb(135, 160, 209);(</lov>)?</?fi;rgb(207, 217, 237);
+avancement;eld id="[a-z0-9]*" label="Statut de l'étudiant"/?>(<lov id="[a-z0-9]*">)?;rgb(191, 184, 148);(</lov>)?</?fi;rgb(239, 238, 229);
+date_debut_diplome;eld id="[a-z0-9]*" label="Date de début du diplôme de l'étudiant"><value format="yyyy/MM" type="YearMonth">;rgb(173, 221, 158);</value></field>;rgb(233, 246, 229);
+date_diplome;<field id="[a-z0-9]*" label="Date d'obtention du diplôme de l'étudiant"><value format="yyyy/MM" type="YearMonth">;rgb(153, 173, 229);</value></field>;rgb(222, 228, 246);
+date_diplome_prevue;<field id="[a-z0-9]*" label="Date prévue pour l'obtention du diplôme de l'étudiant"><value format="yyyy/MM" type="YearMonth">;rgb(175, 222, 142);</value></field>;rgb(233, 246, 224);
+titre_projet;<field id="[a-z0-9]*" label="Titre de la thèse ou du projet"><value type="String">;rgb(218, 156, 140);</value></field>;rgb(237, 207, 200);
+description_fr;<field id="[a-z0-9]*" label="Description du projet"><value type="Bilingual">(</value><bilingual><french>)?;rgb(232, 186, 115);(</french>)?(</field>)?;rgb(249, 238, 221);
+description_en;(<english>)?;rgb(157, 172, 202);(</english>)?(</bilingual></field>)?;rgb(228, 232, 240);
+poste_actuel;<field id="[a-z0-9]*" label="Poste actuel"><value type="String">;rgb(220, 231, 112);</value></field>;rgb(244, 247, 209);
+nom_diplome;<field id="[a-z0-9]*" label="Nom de diplôme"><value type="Bilingual"></value><bilingual/>;rgb(124, 154, 236);</field>;rgb(194, 208, 246);
+specialisation_fr;<field id="[a-z0-9]*" label="Spécialisation"><value type="Bilingual"></value><bilingual/?>(<french>)?;rgb(211, 157, 179);(</french>)?(</field>)?;rgb(240, 221, 229);
+specialisation_en;(<english>)?;rgb(144, 233, 231);(</english>)?(</bilingual></field>)?;rgb(219, 248, 247);
+organisme;<field id="[a-z0-9]*" label="Organisme actuel"><value type="String">;rgb(215, 236, 134);</value></field>;rgb(243, 249, 219);`,
+ 
   "CVCanadienPresentations": `fieldNames;starts;startColors;ends;endsColors;
 titre;<section id="[a-z0-9]*" label="Présentations" recordId="[a-z0-9]*"><field id="[a-z0-9]*" label="Titre de la présentation"><value type="String">;rgb(157, 129, 208);</value></field>;rgb(217, 206, 237);
 nom_evenement;<field id="[a-z0-9]*" label="Nom de conférence ou d'événement"><value type="String">;rgb(115, 242, 149);</value></field>;rgb(212, 251, 223);
@@ -245,7 +267,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
           currentFind.start.col = currentField.startCol;
 
           var end = source.findFirstAt(currentField.end, start.lastIndex, true);
-          if (end.str) {
+          if (end.str !== null) {
             currentFind.end = end;
             currentFind.end.col = currentField.endCol;
           }
@@ -292,15 +314,16 @@ var extractValues = (source = '', fieldDefsArr = []) => {
             }
           }
 
-          // extract the value
-          var value = source.substring(currentFind.start.lastIndex, currentFind.end.index);
-          // if a separator or a newline char is found in the value, escape double quotes and double quote the value
-          if (value.indexOf(';') > -1 || value.indexOf('\n') > -1) {
-            value = '"' + value.replaceAll('"', '""') + '"';
-          }
-
           // if the field does not repeat itself just add it
           if (firstWasFound) {
+            // extract the value
+            var value = source.substring(currentFind.start.lastIndex, currentFind.end.index);
+            // if a separator or a newline char is found in the value, escape double quotes and double quote the value
+            if (value.indexOf(';') > -1 || value.indexOf('\n') > -1) {
+              value = '"' + value.replaceAll('"', '""') + '"';
+            }
+            
+            // add it as a repeated value or not
             if (lastRow[currentFind.fieldName] == undefined) {
               lastRow[currentFind.fieldName] = value;
               lastFieldName = currentFind.fieldName;
@@ -316,13 +339,13 @@ var extractValues = (source = '', fieldDefsArr = []) => {
             else {
               firstWasFound = false;
             }
+            // update the pointer
+            currentPos = currentFind.end.lastIndex;
           }
           else {
             fieldIdx = 0;
           }
 
-          // update the pointer
-          currentPos = currentFind.end.lastIndex;
         }
       }
     }
@@ -470,20 +493,52 @@ if (vals3.resultCSV != 'f1;f2;f3;\na;;c;\ne;;;\n') {
   throw new Error("Test 14 failed!");
 }
 
-// try a simple CSV string
-source = 'f1;f2\na;b;';
+// 15) try a single char as delimiter
+source = '$$AA#BB$$';
 var fieldSet = [
   {
     fieldName: 'f1',
-    start: '^',
+    start: '\\$\\$',
     startCol: ['rgb(255, 0, 0)'],
-    end: ';',
+    end: '(?=#)',
+    endCol: ['rgb(0, 0, 255)']
+  },
+  {
+    fieldName: 'f2',
+    start: '#',
+    startCol: ['rgb(255, 0, 0)'],
+    end: '\\$\\$',
     endCol: ['rgb(0, 0, 255)']
   }
 ];
 vals3 = extractValues(source, fieldSet); // 'f1;f2;\na;b;\n'
-*/
+if (vals3.resultCSV != 'f1;f2;\nAA;BB;\n') {
+  throw new Error("Test 15 failed!");
+}
 
+// 16) try a single char as delimiter
+source = 'xaaaaabyc';
+var fieldSet = [
+  {
+    fieldName: 'f1',
+    start: 'b',
+    startCol: ['rgb(255, 0, 0)'],
+    end: 'c',
+    endCol: ['rgb(0, 0, 255)']
+  },
+  {
+    fieldName: 'f2',
+    start: 'x',
+    startCol: ['rgb(255, 0, 0)'],
+    end: 'y',
+    endCol: ['rgb(0, 0, 255)']
+  }
+];
+vals3 = extractValues(source, fieldSet);
+if (vals3.resultCSV != 'f1;f2;\ny;;\n') {
+  throw new Error("Test 16 failed!");
+}
+*/
 var getFieldDef = () => {
   var fieldDefsArr = [];
   var allRows = document.getElementsByClassName('fieldDefsRow');
