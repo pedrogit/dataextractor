@@ -235,7 +235,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
       do {
         var currentField = fieldDefsArr[searchIdx % fieldDefsArr.length];
         start = source.findFirstAt(currentField.start, currentPos, true);
-        if (start.str !== null && start.index < bestFoundPos) {
+        if (start.str && start.index < bestFoundPos) {
           someThingFound = true;
           bestFoundPos = start.index;
 
@@ -245,7 +245,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
           currentFind.start.col = currentField.startCol;
 
           var end = source.findFirstAt(currentField.end, start.lastIndex, true);
-          if (end.str !== null) {
+          if (end.str) {
             currentFind.end = end;
             currentFind.end.col = currentField.endCol;
           }
@@ -263,7 +263,7 @@ var extractValues = (source = '', fieldDefsArr = []) => {
 
     if (!isEmpty(currentFind)) {
       // highlight the find
-      if (!isEmpty(currentFind.start) && currentFind.start.str !== null) {
+      if (!isEmpty(currentFind.start) && currentFind.start.str) {
         // HTML encode the start string 
         var searchStr = currentFind.start.str.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>');
         var repl = '<span style="background-color: ' + currentFind.start.col + '">' + searchStr + '</span>';
@@ -536,7 +536,7 @@ var prepareExtract = () => {
   clearTimeout(extractThread);
   extractThread = setTimeout(() => {
     var result = extractValues(source, fieldDef);
-    
+
     document.getElementById("resultingCSVWait").style.display = 'none';
     document.getElementById("sourceHighlightedWait").style.display = 'none';
 
