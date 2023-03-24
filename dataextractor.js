@@ -222,8 +222,12 @@ var extractValues = (source = '', fieldDefsArr = []) => {
     var currentFind = {};
     var start = {};
 
-    // search for next closest delimiter starting with the lst found field.
+    // search for next closest delimiter starting with the lst found field (to allow for repeatitions).
     // stop after finding one.
+    // i.e. the follwwing sequence: <1>a</1><2>b</2><2>b</2><3>c</3><2>b</2><1>e</1>
+    //      will result in 'f1;f2;f3;\na;b, b;c;\ne;;;\n'
+    //      not 'f1;f2;f3;\na;b, b, b;c;\ne;;;\n'
+    // have a look at test below for more examples
     if (fieldDefsArr.length > 0) {
       currentFind = {};
       var notLastFound = false;
