@@ -227,24 +227,14 @@ var extractValues = (source = '', fieldDefsArr = []) => {
   // begin writing  the CSV file
   var resultCSV = fieldNames.length > 0 ? fieldNames.join(";") + ";\n" : "";
 
-  /* logic goes like this:
-
-   - find the first start delimiter and the corresponding end delimiter
-   - set the current position to the end of this find
-   - extract the value
-   - remember the value till the next find in case it gets repeated
-   - if the found field is not the same as the previous one add the last one to the current row
-   - if the found fied is a start field, save the last row (and reset the currnt one)
-  */
-
   var fieldIdx = 0;
   do {
-    someThingFound = false;
-    var bestFoundPos = source ? source.length : 0;
-    var currentFind = {};
-    var start = {};
+    someThingFound = false; // main condition for the outer while loop
+    var bestFoundPos = source ? source.length : 0; // set to the worst position in hope of finding a better one
+    var currentFind = {}; // the most current find
+    var start = {}; // start delimiter string and position
 
-    // search for next closest delimiter starting with the lst found field (to allow for repeatitions).
+    // search for next delimiter in the list starting with the lst found field (to allow for repeatitions).
     // stop after finding one.
     // i.e. the follwwing sequence: <1>a</1><2>b</2><2>b</2><3>c</3><2>b</2><1>e</1>
     //      will result in 'f1;f2;f3;\na;b, b;c;\ne;;;\n'
@@ -252,6 +242,9 @@ var extractValues = (source = '', fieldDefsArr = []) => {
     // have a look at test below for more examples
     if (fieldDefsArr.length > 0) {
       currentFind = {};
+
+       // When the last found one is found again we keep searching.
+       // As soon as a "not last found" one is found, we stop searching.
       var notLastFound = false;
       var searchIdx = fieldIdx % fieldDefsArr.length;
       do {
@@ -267,19 +260,29 @@ var extractValues = (source = '', fieldDefsArr = []) => {
           currentFind.start.col = currentField.startCol;
 
           var end = source.findFirstAt(currentField.end, start.lastIndex, true);
+
+          // the test for ens.str is different than the previous test for start.str because
+          // the starting delimiter can not be a zero length regex (like /(?<=\() or /^/)/ 
+          // otherwise the current position could, in some cases, never increase and the main 
+          // loop llop indefinitely) but the ending delimiter can be zero length (so a single
+          // character can be a delimiter between two values e.g / /)
           if (end.str !== null) {
             currentFind.end = end;
             currentFind.end.col = currentField.endCol;
           }
 
+          // when searchIdx is > fieldIdx we are not searching for the last delimiter anymore
           if (searchIdx > fieldIdx) {
             notLastFound = true;
           }
 
+          // set the last found field index
           fieldIdx = searchIdx;
         }
         searchIdx++;
       }
+      // we stop searching when we searched for all delimiters startng from the alst one till 
+      // the first one (index 0) or when as soon as we find one different than the last one
       while (searchIdx <= fieldDefsArr.length && !notLastFound)
     }
 
@@ -345,7 +348,6 @@ var extractValues = (source = '', fieldDefsArr = []) => {
           else {
             fieldIdx = 0;
           }
-
         }
       }
     }
